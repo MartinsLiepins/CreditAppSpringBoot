@@ -2,8 +2,6 @@ package lv.mlproject17.CreditApp.database.model;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by marko on 2017.12.08..
@@ -17,7 +15,10 @@ public class Loan {
 	@Column(name = "loan_issue_id")
 	private Long id;
 
-	@Column(nullable = false, name = "loan_amount")
+	@Column(nullable = false, name = "customer_id")
+	private Long customerId;
+
+	@Column(nullable = false, name = "amount")
 	private BigDecimal amount;
 
 	@Column(nullable = false, length = 5, name = "passing_term_days")
@@ -29,39 +30,52 @@ public class Loan {
 	@Column(nullable = false, length = 30, name = "loan_issue_date")
 	private String issueDate;
 
-	@ManyToOne
-	@JoinColumn(name = "customer_id", nullable = false)
-	private Customer customer;
+	@Column(name = "loan_return_state")
+	private boolean loanReturnState;
 
-	@ManyToOne
-	@JoinColumn(name = "application_id", nullable = false)
-	private LoanApplication loanApplication;
+//	@ManyToOne
+//	@JoinColumn(name = "customer_id", nullable = false)
+//	private Customer customer;
+//
+//	@ManyToOne
+//	@JoinColumn(name = "application_id", nullable = false)
+//	private LoanApplication loanApplication;
+//
+//	@OneToMany(fetch=FetchType.LAZY, mappedBy = "loan")
+//	private Set<ExtendedLoans> extendedLoans = new HashSet<>(0);
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy = "loan")
-	private Set<ExtendedLoans> extendedLoans = new HashSet<>(0);
+	public Loan(){}
 
-	protected Loan(){}
-
-	public Loan(Customer customer, LoanApplication loanApplication,
-	            BigDecimal amount, int passingTerm, boolean loanExtended,
-	            String loanIssueDate){
-		this.customer = customer;
-		this.loanApplication = loanApplication;
+	public Loan(Long customerId, BigDecimal amount,
+	            int passingTerm, boolean loanExtended,
+	            String issueDate){
+		this.customerId = customerId;
 		this.amount = amount;
 		this.passingTerm = passingTerm;
 		this.loanExtended = loanExtended;
-		this.issueDate = loanIssueDate;
+		this.issueDate = issueDate;
 	}
+
+	//	public Loan(Customer customer, LoanApplication loanApplication,
+//	            BigDecimal amount, int passingTerm, boolean loanExtended,
+//	            String loanIssueDate){
+//		this.customer = customer;
+//		this.loanApplication = loanApplication;
+//		this.amount = amount;
+//		this.passingTerm = passingTerm;
+//		this.loanExtended = loanExtended;
+//		this.issueDate = loanIssueDate;
+//	}
 
 	public Long getId(){
 		return id;
 	}
-	public Customer getCustomer(){
-		return customer;
-	}
-	public LoanApplication getLoanApplication(){
-		return loanApplication;
-	}
+//	public Customer getCustomer(){
+//		return customer;
+//	}
+//	public LoanApplication getLoanApplication(){
+//		return loanApplication;
+//	}
 	public BigDecimal getAmount(){
 		return amount;
 	}
@@ -74,13 +88,28 @@ public class Loan {
 	public String getIssueDate(){
 		return issueDate;
 	}
-
-
-	public void setCustomer(Customer customer){
-		this.customer = customer;
+	public boolean isLoanReturnState(){
+		return loanReturnState;
 	}
-	public void setLoanApplication(LoanApplication loanApplication){
-		this.loanApplication = loanApplication;
+
+	public Long getCustomerId(){
+		return customerId;
+	}
+	public void setCustomerId(Long customerId){
+		this.customerId = customerId;
+	}
+
+
+
+	//	public void setCustomer(Customer customer){
+//		this.customer = customer;
+//	}
+//	public void setLoanApplication(LoanApplication loanApplication){
+//		this.loanApplication = loanApplication;
+//	}
+
+	public void setId(Long id){
+		this.id = id;
 	}
 	public void setAmount(BigDecimal amount){
 		this.amount = amount;
@@ -94,5 +123,7 @@ public class Loan {
 	public void setIssueDate(String takeLoanDate){
 		this.issueDate = takeLoanDate;
 	}
-
+	public void setLoanReturnState(boolean loanReturnState){
+		this.loanReturnState = loanReturnState;
+	}
 }

@@ -10,4 +10,6 @@ import java.math.BigDecimal;
 public interface TakeLoanService {
 	Response takeLoan(BigDecimal loanAmount, int passingTerm);
 
+//	void updateLoanApplicationState(LoanApplicationDTO dto);
+
 }

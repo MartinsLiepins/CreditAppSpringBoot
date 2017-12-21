@@ -12,12 +12,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
-	@Query("SELECT id FROM Customer WHERE id.name = :name and id.password = :password")
+	@Query("SELECT id FROM Customer c WHERE c.name = :name and c.password = :password")
 	Long findByPasswordAndName(@Param("name") String name,
-	                             @Param("password") String password);
+	                           @Param("password") String password);
 
-//	@Query(SELECT id FROM Customer WHERE id.name = :name and id.password = :password")
-//			findById(@Param("customer_id"))
+//	@Query("SELECT all FROM Customer WHERE all.customer_id = :customer_id")
+//	Customer findById(@Param("customer_id") Long id);
 
 	Customer save(Customer newCustomer);
 }

@@ -2,8 +2,6 @@ package lv.mlproject17.CreditApp.database.model;
 
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by marko on 2017.12.08..
@@ -26,8 +24,8 @@ public class Customer {
 	@Column(nullable = false, length = 30, name = "registration_date")
 	private String registrationDate;
 
-	@OneToMany(fetch=FetchType.LAZY, mappedBy = "customer")
-	private Set<LoanApplication> loanApplication = new HashSet<>(0);
+//	@OneToMany(fetch=FetchType.LAZY, mappedBy = "customer")
+//	private Set<LoanApplication> loanApplication = new HashSet<>(0);
 
 	public Customer(){
 	}
@@ -38,14 +36,14 @@ public class Customer {
 		this.registrationDate = date;
 	}
 
-	public Customer(String name, String password,
-	                String registrationDate,
-	                Set<LoanApplication> loanApplication){
-		this.name = name;
-		this.password = password;
-		this.registrationDate = registrationDate;
-		this.loanApplication = loanApplication;
-	}
+//	public Customer(String name, String password,
+//	                String registrationDate,
+//	                Set<LoanApplication> loanApplication){
+//		this.name = name;
+//		this.password = password;
+//		this.registrationDate = registrationDate;
+//		this.loanApplication = loanApplication;
+//	}
 
 	public Long getId(){
 		return id;
@@ -59,9 +57,9 @@ public class Customer {
 	public String getRegistrationDate(){
 		return registrationDate;
 	}
-	public void setLoanApplication(Set<LoanApplication> loanApplication){
-		this.loanApplication = loanApplication;
-	}
+//	public void setLoanApplication(Set<LoanApplication> loanApplication){
+//		this.loanApplication = loanApplication;
+//	}
 
 
 	public void setId(Long id){
@@ -76,7 +74,7 @@ public class Customer {
 	public void setRegistrationDate(String registrationDate){
 		this.registrationDate = registrationDate;
 	}
-	public Set<LoanApplication> getLoanApplication(){
-		return loanApplication;
-	}
+//	public Set<LoanApplication> getLoanApplication(){
+//		return loanApplication;
+//	}
 }

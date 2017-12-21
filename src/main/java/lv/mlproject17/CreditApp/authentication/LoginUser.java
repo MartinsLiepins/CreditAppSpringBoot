@@ -19,8 +19,7 @@ public class LoginUser {
 		this.id = id;
 	}
 
-	public static Long logInState(){
-//		return this.id;
+	public static Long logInId(){
 	return id;
 	}
 }

@@ -22,8 +22,8 @@ public class LoginServiceImpl implements LoginService{
 
 			LoginUser loginUser = new LoginUser(loginId);
 
-			return Response.actionSucess();
+			return Response.serviceResponse("Welcome to CreditApp", true);
 		}
-		return Response.actionFail();
+		return Response.serviceResponse("Please register and than login", false);
 	}
 }
