@@ -1,13 +1,12 @@
 package lv.mlproject17.CreditApp.services;
 
+import lv.mlproject17.CreditApp.api.DateAndTime;
 import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.database.model.Customer;
 import lv.mlproject17.CreditApp.database.repository.CustomerRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 /**
  * Created by marko on 2017.12.10..
@@ -19,13 +18,15 @@ public class RegisterCustomerServiceImpl implements RegisterCustomerService{
 	private CustomerRepository customerRepository;
 	@Autowired
 	private LoanRepository loanRepository;
+	@Autowired
+	DateAndTime dateAndTime;
 
 	@Override
 	public Response registerUser(String name, String password){
 
 		if(customerRepository.findByPasswordAndName(name,password) == null){
-			Customer customer = new Customer(name, password,
-								LocalDateTime.now().toString());
+			String dateTime = dateAndTime.getDateAndTimeString();
+			Customer customer = new Customer(name, password, dateTime);
 			customerRepository.save(customer);
 			return Response.serviceResponse("You are registered", true);
 		}

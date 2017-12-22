@@ -29,57 +29,49 @@ public class RestApiController {
 	@Autowired
 	private ReturnLoanService returnLoanService;
 
-	private Response response;
 
 	@GetMapping(path="/register")
-	public @ResponseBody Response registerNewCustomer
+	@ResponseBody
+	Response registerNewCustomer
 			(@RequestParam(value = "name") String name,
 			 @RequestParam(value ="password") String password){
-
-		response = registerCustomerService.registerUser(name, password);
-		return response;
+		return registerCustomerService.registerUser(name, password);
 	}
 
 	@GetMapping(path="/login")
-	public @ResponseBody Response logIn
+	@ResponseBody
+	Response logIn
 			(@RequestParam(value = "name") String name,
 			 @RequestParam(value = "password") String password){
-
-				response = loginService.logIn(name, password);
-			return response;
+		return loginService.logIn(name, password);
 	}
 
 	@GetMapping(path="/login/loan")
-	public @ResponseBody Response takeLoan
+	@ResponseBody
+	Response takeLoan
 			(@RequestParam(value = "loanAmount")BigDecimal loanAmount,
 			 @RequestParam(value = "passingTerm") int passingTerm){
-
-		response = takeLoanService.takeLoan(loanAmount, passingTerm);
-		return response;
+		return takeLoanService.takeLoan(loanAmount, passingTerm);
 	}
 
 	@GetMapping(path="/login/extendLoan")
-	public @ResponseBody Response extendLoan
+	@ResponseBody
+	Response extendLoan
 			(@RequestParam(value = "extendTermWeeks") int extendTermWeeks){
-
-		response = extendTermService.extendLastUserLoan(extendTermWeeks);
-		return response;
+		return extendTermService.extendLastUserLoan(extendTermWeeks);
 	}
 
-	@GetMapping(path="/login/viewLoans")
-	public @ResponseBody List<ViewUserLoansDTO> viewLoans
-			(@RequestParam(value = "customerId") Long customerId){
-
-		List<ViewUserLoansDTO> viewLoans = viewUserLoansService.viewCustomerLoans(customerId);
-		return viewLoans;
-	}
+	@RequestMapping(path="/login/viewLoans")
+	@ResponseBody
+	List<ViewUserLoansDTO> viewLoans(){
+				return viewUserLoansService.viewCustomerLoans();
+			}
 
 	@GetMapping(path="/login/returnLoan")
-	public @ResponseBody Response returnLoan
+	@ResponseBody
+	Response returnLoan
 			(@RequestParam(value = "returnAmount") BigDecimal returnAmount){
-
-		response = returnLoanService.returnLoan(returnAmount);
-		return response;
+		return returnLoanService.returnLoan(returnAmount);
 	}
 }
 

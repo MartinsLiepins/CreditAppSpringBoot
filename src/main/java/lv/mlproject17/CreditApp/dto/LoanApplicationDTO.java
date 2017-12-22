@@ -1,6 +1,6 @@
 package lv.mlproject17.CreditApp.dto;
 
-import lv.mlproject17.CreditApp.analisisOfRisks.LoanApplicationState;
+import lv.mlproject17.CreditApp.riskanalysis.LoanApplicationState;
 
 import java.math.BigDecimal;
 

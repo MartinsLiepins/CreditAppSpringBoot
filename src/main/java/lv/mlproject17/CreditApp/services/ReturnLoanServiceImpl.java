@@ -53,7 +53,6 @@ public class ReturnLoanServiceImpl implements ReturnLoanService{
 				return Response.serviceResponse("Return loan amount is to large, loan is not returned", false);
 			}
 		}
-//		return Response.serviceResponse("Service error", false);
 	}
 
 	private LoanDTO LoanDtoBuilder(Loan loan){

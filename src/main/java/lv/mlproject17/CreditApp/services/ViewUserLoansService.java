@@ -8,8 +8,6 @@ import java.util.List;
  * Created by marko on 2017.12.08..
  */
 public interface ViewUserLoansService {
-	List<ViewUserLoansDTO> viewCustomerLoans(Long id);
+	List<ViewUserLoansDTO> viewCustomerLoans();
 
-//	List<Customer> getUserLoans(Long id);
-//	List<Customer> getExtendedUserLoans(Long Id);
 }

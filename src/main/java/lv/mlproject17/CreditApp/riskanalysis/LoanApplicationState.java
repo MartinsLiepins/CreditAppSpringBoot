@@ -1,4 +1,4 @@
-package lv.mlproject17.CreditApp.analisisOfRisks;
+package lv.mlproject17.CreditApp.riskanalysis;
 
 /**
  * Created by marko on 2017.12.13..

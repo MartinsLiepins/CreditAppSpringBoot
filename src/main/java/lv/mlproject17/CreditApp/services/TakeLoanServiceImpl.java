@@ -1,7 +1,6 @@
 package lv.mlproject17.CreditApp.services;
 
-import lv.mlproject17.CreditApp.analisisOfRisks.LoanApplicationState;
-import lv.mlproject17.CreditApp.analisisOfRisks.RiskAnalysis;
+import lv.mlproject17.CreditApp.api.DateAndTime;
 import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.authentication.LoginUser;
 import lv.mlproject17.CreditApp.database.model.Loan;
@@ -9,11 +8,12 @@ import lv.mlproject17.CreditApp.database.model.LoanApplication;
 import lv.mlproject17.CreditApp.database.repository.LoanApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
 import lv.mlproject17.CreditApp.dto.LoanApplicationDTO;
+import lv.mlproject17.CreditApp.riskanalysis.LoanApplicationState;
+import lv.mlproject17.CreditApp.riskanalysis.RiskAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Created by marko on 2017.12.10..
@@ -28,19 +28,21 @@ public class TakeLoanServiceImpl implements TakeLoanService {
 	private LoanRepository loanRepository;
 	@Autowired
 	private RiskAnalysis analysis;
+	@Autowired
+	DateAndTime dateAndTime;
+
 
 	@Override
 	public Response takeLoan(BigDecimal loanAmount, int passingTerm){
-
-		String date = LocalDateTime.now().toString();
+		String dateTime = dateAndTime.getDateAndTimeString();
 
 		LoanApplication loanApplication = new LoanApplication();
 		loanApplication = loanApplicationBuilder(loanApplication,loanAmount,
-				passingTerm, date, LoginUser.logInId());
+				passingTerm, dateTime, LoginUser.logInId());
 		loanApplicationRepository.save(loanApplication);
 
 		LoanApplicationDTO dtoReceive = analysis.loanApplicationAnalysis
-				(new LoanApplicationDTO(loanAmount, passingTerm, date,
+				(new LoanApplicationDTO(loanAmount, passingTerm, dateTime,
 						LoginUser.logInId()));
 
 		switch(dtoReceive.getState()){
@@ -63,17 +65,19 @@ public class TakeLoanServiceImpl implements TakeLoanService {
 		}
 	}
 
-	private static Loan loanBuilder(LoanApplicationDTO dtoReceive){
+	private Loan loanBuilder(LoanApplicationDTO dtoReceive){
 		Loan loan = new Loan();
+		String dateTime = dateAndTime.getDateAndTimeString();
+
 		loan.setCustomerId(dtoReceive.getCustomerId());
 		loan.setAmount(dtoReceive.getAmount());
-		loan.setIssueDate(LocalDateTime.now().toString());
+		loan.setIssueDate(dateTime);
 		loan.setLoanExtended(false);
 		loan.setPassingTerm(dtoReceive.getPassingTerm());
 		return loan;
 	}
 
-	private static LoanApplication loanApplicationBuilder(LoanApplication application, BigDecimal loanAmount, int passingTerm, String date, Long customerId){
+	private LoanApplication loanApplicationBuilder(LoanApplication application, BigDecimal loanAmount, int passingTerm, String date, Long customerId){
 
 		application.setApplicationAmount(loanAmount);
 		application.setPassingTerm(passingTerm);

@@ -1,5 +1,6 @@
 package lv.mlproject17.CreditApp.services;
 
+import lv.mlproject17.CreditApp.api.DateAndTime;
 import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.authentication.LoginUser;
 import lv.mlproject17.CreditApp.database.model.ExtendedLoans;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 /**
  * Created by marko on 2017.12.10..
@@ -25,6 +25,8 @@ public class ExtendTermServiceImpl implements ExtendTermService {
 	LoanRepository loanRepository;
 	@Autowired
 	ExtendedLoanRepository extendedLoanRepository;
+	@Autowired
+	DateAndTime dateAndTime;
 
 	@Override
 	public Response extendLastUserLoan(int extendTermWeeks){
@@ -47,7 +49,7 @@ public class ExtendTermServiceImpl implements ExtendTermService {
 		}
 	}
 
-	private static LoanDTO buildLoanDto(Loan loan){
+	private LoanDTO buildLoanDto(Loan loan){
 		LoanDTO dto = new LoanDTO();
 		dto.setLoanExtended(loan.isLoanExtended());
 		dto.setAmount(loan.getAmount());
@@ -56,15 +58,16 @@ public class ExtendTermServiceImpl implements ExtendTermService {
 		return dto;
 	}
 
-	private static ExtendedLoans buildExtendedLoan(LoanDTO dto, int extendTermWeeks){
+	private ExtendedLoans buildExtendedLoan(LoanDTO dto, int extendTermWeeks){
 		ExtendedLoans extLoan = new ExtendedLoans();
+		String dateTime = dateAndTime.getDateAndTimeString();
 		extLoan.setExtendedAmount(calcAmountWithPercentsPerWeek(dto.getAmount(), extendTermWeeks));
 		extLoan.setExtendTermWeeks(extendTermWeeks);
 		extLoan.setLoanId(dto.getId());
-		extLoan.setExtendPassingTermDate(LocalDateTime.now().toString());
+		extLoan.setExtendPassingTermDate(dateTime);
 		return extLoan;
 	}
-	private static BigDecimal calcAmountWithPercentsPerWeek(BigDecimal amount, int extendTermWeeks){
+	private BigDecimal calcAmountWithPercentsPerWeek(BigDecimal amount, int extendTermWeeks){
 		return amount.add(new BigDecimal(extendTermWeeks).
 				multiply(amount.multiply(EXTEND_LOAN_INTEREST_FACTOR_PER_WEEK)));
 	}

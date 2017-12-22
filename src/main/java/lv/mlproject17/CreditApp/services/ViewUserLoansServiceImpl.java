@@ -24,7 +24,7 @@ public class ViewUserLoansServiceImpl implements ViewUserLoansService {
 	ExtendedLoanRepository extendedLoanRepository;
 
 	@Override
-	public List<ViewUserLoansDTO> viewCustomerLoans(Long id){
+	public List<ViewUserLoansDTO> viewCustomerLoans(){
 
 		List<Loan> userLoans = loanRepository.getLoansByCustomerId(LoginUser.logInId());
 		List<ViewUserLoansDTO> userLoansDTO = new ArrayList<>();
