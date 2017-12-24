@@ -13,6 +13,7 @@ public class ViewUserLoansDTO {
 	private BigDecimal amount;
 	private int passingTerm;
 	private String loanIssueDate;
+	private boolean loanReturnState;
 	private List<ExtendedLoansDTO> extendedLoans;
 
 	public ViewUserLoansDTO(){}
@@ -29,6 +30,9 @@ public class ViewUserLoansDTO {
 	public void setLoanIssueDate(String loanIssueDate){
 		this.loanIssueDate = loanIssueDate;
 	}
+	public void setLoanReturnState(boolean loanReturnState){
+		this.loanReturnState = loanReturnState;
+	}
 	public void setExtendedLoans(List<ExtendedLoansDTO> loanIsExtended){
 		this.extendedLoans = loanIsExtended;
 	}
@@ -44,6 +48,9 @@ public class ViewUserLoansDTO {
 	}
 	public String getLoanIssueDate(){
 		return loanIssueDate;
+	}
+	public boolean getLoanReturnState(){
+		return loanReturnState;
 	}
 	public List<ExtendedLoansDTO> getExtendedLoans(){
 		return extendedLoans;

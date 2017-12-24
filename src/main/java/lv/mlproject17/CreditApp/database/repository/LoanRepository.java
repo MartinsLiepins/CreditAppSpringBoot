@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by marko on 2017.12.10..
@@ -33,9 +34,6 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
 	int updateLoanReturnState(@Param("status") boolean status,
 	                           @Param("id") Long id);
 
-//	@Query("SELECT id FROM Loan l WHERE l.customerId = :id")
-//	Long findByValue(@Param("id") Long customerId);
-
 	@Query("SELECT MAX(id) FROM Loan l WHERE l.customerId = :id")
 	Long getLastUserLoanIdByCustomerId(@Param("id") Long customerId);
 
@@ -44,6 +42,9 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
 
 	@Query("SELECT l FROM Loan l WHERE l.customerId = :id")
 	List<Loan> getLoansByCustomerId(@Param("id") Long customerId);
+
+	@Query("SELECT l FROM Loan l WHERE l.customerId = :id")
+	Optional<List<Loan>> findLoansByCustomerId(@Param("id") Long customerId);
 
 	@Query("SELECT loanReturnState FROM Loan l WHERE l.id = :id")
 	boolean getLoansReturnStateByLoanId(@Param("id") Long id);

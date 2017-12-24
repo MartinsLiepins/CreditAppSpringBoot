@@ -34,7 +34,7 @@ public class LoanDTO {
 	public String getIssueDate(){
 		return issueDate;
 	}
-	public boolean isLoanReturnState(){
+	public boolean getLoanReturnState(){
 		return loanReturnState;
 	}
 

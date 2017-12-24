@@ -1,6 +1,6 @@
-package lv.mlproject17.CreditApp.api;
+package lv.mlproject17.CreditApp.threads;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +8,8 @@ import java.time.format.DateTimeFormatter;
 /**
  * Created by marko on 2017.12.22..
  */
-@Service
+//@Service
+@Component
 public class DateAndTime {
 
 	public String getDateAndTimeString(){

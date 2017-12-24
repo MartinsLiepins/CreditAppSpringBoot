@@ -1,18 +1,18 @@
-package lv.mlproject17.CreditApp.riskanalysis;
+package lv.mlproject17.CreditApp.threads;
 
-import lv.mlproject17.CreditApp.api.DateAndTime;
 import lv.mlproject17.CreditApp.database.repository.LoanApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
 import lv.mlproject17.CreditApp.dto.LoanApplicationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
 /**
  * Created by marko on 2017.12.12..
  */
-@Service
+//@Service
+@Component
 public class RiskAnalysis {
 
 	@Autowired
@@ -90,8 +90,4 @@ public class RiskAnalysis {
 		}
 		return dtoOut;
 	}
-
-
-
-	
 }

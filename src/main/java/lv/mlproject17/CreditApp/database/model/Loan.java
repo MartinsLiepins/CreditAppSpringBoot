@@ -76,6 +76,9 @@ public class Loan {
 //	public LoanApplication getLoanApplication(){
 //		return loanApplication;
 //	}
+	public Long getCustomerId(){
+	return customerId;
+}
 	public BigDecimal getAmount(){
 		return amount;
 	}
@@ -88,18 +91,9 @@ public class Loan {
 	public String getIssueDate(){
 		return issueDate;
 	}
-	public boolean isLoanReturnState(){
+	public boolean getLoanReturnState(){
 		return loanReturnState;
 	}
-
-	public Long getCustomerId(){
-		return customerId;
-	}
-	public void setCustomerId(Long customerId){
-		this.customerId = customerId;
-	}
-
-
 
 	//	public void setCustomer(Customer customer){
 //		this.customer = customer;
@@ -110,6 +104,9 @@ public class Loan {
 
 	public void setId(Long id){
 		this.id = id;
+	}
+	public void setCustomerId(Long customerId){
+		this.customerId = customerId;
 	}
 	public void setAmount(BigDecimal amount){
 		this.amount = amount;

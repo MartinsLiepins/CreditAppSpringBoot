@@ -1,35 +1,55 @@
 package lv.mlproject17.CreditApp.api;
 
+import lv.mlproject17.CreditApp.dto.ViewUserLoansDTO;
+
+import java.util.List;
+
 /**
  * Created by marko on 2017.12.10..
  */
 public class Response {
 
-	private String message;
-	private boolean applicationCondition;
+	private boolean success;
+	private List<Error> errors;
+	private List<Warning> warnings;
+	private List<ViewUserLoansDTO> viewLoansList;
 
-	public Response(String message, boolean applicationCondition){
-		this.message = message;
-		this.applicationCondition = applicationCondition;
+	public static Response successResponse(List<Warning> warnings){
+		return new Response(true, null, warnings);
 	}
 
-	public static Response serviceResponse(String string, boolean actionCondiotion){
-		return new Response(string, actionCondiotion);
+	public static Response failResponse(List<Error> errors){
+		return new Response(false, errors, null);
 	}
 
-	public String getMessage(){
-		return message;
+	public static Response viewLoansResponse(List<ViewUserLoansDTO> viewLoansList){
+	return new Response(viewLoansList);
 	}
 
-	public void setMessage(String message){
-		this.message = message;
+	public Response(boolean success, List<Error> errors, List<Warning> warnings){
+		this.success = success;
+		this.errors = errors;
+		this.warnings = warnings;
 	}
 
-	public boolean isApplicationCondition(){
-		return applicationCondition;
+	public Response(List<ViewUserLoansDTO> viewList){
+		this.viewLoansList = viewList;
 	}
 
-	public void setApplicationCondition(boolean applicationCondition){
-		this.applicationCondition = applicationCondition;
+	public List<Error> getErrors(){
+		return errors;
+	}
+	public List<Warning> getWarnings(){
+		return warnings;
+	}
+	public List<ViewUserLoansDTO> getViewLoansList(){
+		return viewLoansList;
+	}
+
+	public boolean isSuccess(){
+		return success;
+	}
+	public boolean isFail(){
+		return !success;
 	}
 }

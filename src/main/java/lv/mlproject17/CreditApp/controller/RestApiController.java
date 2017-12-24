@@ -1,13 +1,11 @@
 package lv.mlproject17.CreditApp.controller;
 
 import lv.mlproject17.CreditApp.api.Response;
-import lv.mlproject17.CreditApp.dto.ViewUserLoansDTO;
 import lv.mlproject17.CreditApp.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Created by marko on 2017.12.08..
@@ -25,7 +23,7 @@ public class RestApiController {
 	@Autowired
 	private TakeLoanService takeLoanService;
 	@Autowired
-	private ViewUserLoansService viewUserLoansService;
+	private ViewLoansService viewLoansService;
 	@Autowired
 	private ReturnLoanService returnLoanService;
 
@@ -63,8 +61,8 @@ public class RestApiController {
 
 	@RequestMapping(path="/login/viewLoans")
 	@ResponseBody
-	List<ViewUserLoansDTO> viewLoans(){
-				return viewUserLoansService.viewCustomerLoans();
+	Response viewLoans(){
+				return viewLoansService.viewCustomerLoans();
 			}
 
 	@GetMapping(path="/login/returnLoan")

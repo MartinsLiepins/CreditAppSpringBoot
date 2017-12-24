@@ -1,4 +1,4 @@
-package lv.mlproject17.CreditApp.riskanalysis;
+package lv.mlproject17.CreditApp.threads;
 
 /**
  * Created by marko on 2017.12.13..
