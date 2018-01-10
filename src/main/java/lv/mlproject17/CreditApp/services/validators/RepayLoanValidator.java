@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ReturnLoanValidator{
+public class RepayLoanValidator {
 
 	@Autowired
 	LoanRepository loanRepository;
@@ -35,8 +35,6 @@ public class ReturnLoanValidator{
 	private boolean notExist(Long loginId){
 		return (!loanRepository.findLoansByCustomerId(loginId).isPresent());
 	}
-
-
 
 	private Optional<Error> validateAmount(BigDecimal loanAmount){
 		if (loanAmount == null || loanAmount.equals("")) {

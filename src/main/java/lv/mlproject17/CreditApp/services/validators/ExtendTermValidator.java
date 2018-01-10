@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by marko on 2017.12.22..
- */
-
 @Component
 public class ExtendTermValidator {
 	@Autowired

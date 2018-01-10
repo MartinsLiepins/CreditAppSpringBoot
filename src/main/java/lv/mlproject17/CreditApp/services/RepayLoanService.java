@@ -8,7 +8,7 @@ import lv.mlproject17.CreditApp.database.repository.ExtendedLoanRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
 import lv.mlproject17.CreditApp.dto.LoanDTO;
-import lv.mlproject17.CreditApp.services.validators.ReturnLoanValidator;
+import lv.mlproject17.CreditApp.services.validators.RepayLoanValidator;
 import lv.mlproject17.CreditApp.services.validators.ServiceErrorMessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 @Service
-public class ReturnLoanService {
+public class RepayLoanService {
 
 	@Autowired
 	private ExtendedLoanRepository extendedLoanRepository;
@@ -30,7 +30,7 @@ public class ReturnLoanService {
 	@Autowired
 	private LoanApplicationRepository loanApplicationRepository;
 	@Autowired
-	private ReturnLoanValidator validator;
+	private RepayLoanValidator validator;
 	@Autowired
 	private ServiceErrorMessageBuilder serviceErrorMessageBuilder;
 
@@ -41,14 +41,14 @@ public class ReturnLoanService {
 			return Response.failResponse(validationError);
 		}
 
-		Long loanId = loanRepository.getLastUserLoanIdByCustomerId(LoginUser.logInId());
+		Long loanId = loanRepository.getLastLoanIdByCustomerId(LoginUser.logInId());
 
 		LoanDTO loanDto = LoanDtoBuilder(loanRepository.getLoanByLoanId(loanId));
 
 		if(loanDto.isLoanExtended()){
 			loanDto.setAmount(extendedLoanRepository.findExtendedLoanAmount(loanDto.getId()));
 			if(loanDto.getAmount().compareTo(returnAmount) == 0){
-				loanRepository.updateLoanReturnState(true, loanDto.getId());
+				loanRepository.updateLoanRepayState(true, loanDto.getId());
 				return Response.successResponse(null);
 
 			}else if(loanDto.getAmount().compareTo(returnAmount) == 1){
@@ -62,7 +62,7 @@ public class ReturnLoanService {
 			}
 		}else{
 			if(loanDto.getAmount().compareTo(returnAmount) == 0){
-				loanRepository.updateLoanReturnState(true, loanDto.getId());
+				loanRepository.updateLoanRepayState(true, loanDto.getId());
 				return Response.successResponse(null);
 
 			}else if(loanDto.getAmount().compareTo(returnAmount) == 1){

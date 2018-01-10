@@ -2,6 +2,7 @@ package lv.mlproject17.CreditApp.services.validators;
 
 import lv.mlproject17.CreditApp.api.Error;
 import lv.mlproject17.CreditApp.database.repository.CustomerRepository;
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,25 +17,30 @@ public class RegisterCustomerValidator{
 	@Autowired
 	private CustomerRepository customerRepository;
 
-	public List<Error> validate(String name, String password){
+	public List<Error> validate(String email, String password){
 		List<Error> errors = new ArrayList<>();
-		validateLogin(name).ifPresent(e -> errors.add(e));
+		validateLoginEmail(email).ifPresent(e -> errors.add(e));
 		validatePassword(password).ifPresent(e -> errors.add(e));
 		return errors;
 	}
 
-	private Optional<Error> validateLogin(String name){
-		if (name == null || name.equals("")) {
-			return Optional.of(new Error("login", "Login must be not empty"));
-		}else if (alreadyExist(name)) {
-			return Optional.of(new Error("login", "Login already exist"));
+	private Optional<Error> validateLoginEmail(String email){
+		EmailValidator validator = new EmailValidator();
+		if(!validator.isValid(email, null)){
+			return Optional.of(new Error("login", "Incorrect e-mail"));
+		}
+		else if (email == null || email.equals("")){
+			return Optional.of(new Error("login", "E-mail must be not empty"));
+		}
+		else if (alreadyExist(email)) {
+			return Optional.of(new Error("login", "E-mail already exist"));
 		}else{
 			return Optional.empty();
 		}
 	}
 
-	private boolean alreadyExist(String loginName) {
-		return customerRepository.findNameByLoginName(loginName).isPresent();
+	private boolean alreadyExist(String email) {
+		return customerRepository.findNameByLoginEmail(email).isPresent();
 	}
 
 	private Optional<Error> validatePassword(String password){

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -46,36 +47,35 @@ public class TakeLoanService {
 			return Response.failResponse(validationError);
 		}
 
-		String dateTime = dateAndTime.getDateAndTimeString();
-
 		LoanApplication loanApplication = new LoanApplication();
+
 		loanApplication = loanApplicationBuilder(loanApplication,loanAmount,
-				passingTerm, dateTime, LoginUser.logInId());
+				passingTerm, LoginUser.logInId());
+
 		loanApplicationRepository.save(loanApplication);
 
 		LoanApplicationDTO dtoReceive = analysis.loanApplicationAnalysis
-				(new LoanApplicationDTO(loanAmount, passingTerm, dateTime,
-						LoginUser.logInId()));
+				(new LoanApplicationDTO(loanAmount, passingTerm,
+						LocalDateTime.now(),LoginUser.logInId()));
+
+		updateLoanApplicationState(dtoReceive);
 
 		switch(dtoReceive.getState()){
 			case REJECTED:
-				updateLoanApplicationState(dtoReceive);
-
 				return Response.failResponse
 						(serviceErrorMessageBuilder.buildMessage
 								("", "Loan application rejected"));
 
 			case APPROVED:
-				updateLoanApplicationState(dtoReceive);
 				loanRepository.save(loanBuilder(dtoReceive));
 				return Response.successResponse(null);
 
 			case APPROVED_WITH_CONDITIONS:
-				updateLoanApplicationState(dtoReceive);
 				loanRepository.save(loanBuilder(dtoReceive));
 				return Response.successResponse
 						(serviceWarningMessageBuilder.buildMessage
-								("Approved loan amount is " +dtoReceive.getAmount()+ " EUR"));
+								("Approved loan amount is " +dtoReceive.getAmount()+
+										" EUR"));
 
 			default:
 				return Response.failResponse
@@ -85,21 +85,23 @@ public class TakeLoanService {
 
 	private Loan loanBuilder(LoanApplicationDTO dtoReceive){
 		Loan loan = new Loan();
-		String dateTime = dateAndTime.getDateAndTimeString();
 
 		loan.setCustomerId(dtoReceive.getCustomerId());
 		loan.setAmount(dtoReceive.getAmount());
-		loan.setIssueDate(dateTime);
+		loan.setIssueDate(LocalDateTime.now());
 		loan.setLoanExtended(false);
-		loan.setPassingTerm(dtoReceive.getPassingTerm());
+		loan.setLoanRepayState(false);
+		loan.setPassingTermDays(dtoReceive.getPassingTermDays());
 		return loan;
 	}
 
-	private LoanApplication loanApplicationBuilder(LoanApplication application, BigDecimal loanAmount, int passingTerm, String date, Long customerId){
+	private LoanApplication loanApplicationBuilder(LoanApplication application,
+	                                               BigDecimal loanAmount,
+	                                               int passingTerm, Long customerId){
 
 		application.setApplicationAmount(loanAmount);
-		application.setPassingTerm(passingTerm);
-		application.setApplicationDate(date);
+		application.setPassingTermDays(passingTerm);
+		application.setApplicationDate(LocalDateTime.now());
 		application.setCustomerId(customerId);
 		LoanApplicationState ss = (LoanApplicationState.IN_PROCESSING);
 		application.setApplicationStatus(ss.toString());
@@ -110,11 +112,4 @@ public class TakeLoanService {
 		loanApplicationRepository.updateApplicationState
 				((dto.getState()).toString(), dto.getLoanApplicationId());
 	}
-
-//	List<Error> serviceErrorBuilder(String errorMessage){
-//	 	Error error = new Error("Take Loan", errorMessage);
-//		List<Error> errors = new ArrayList<>();
-//		errors.add(error);
-//		return errors;
-//	}
 }

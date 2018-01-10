@@ -1,7 +1,7 @@
 package lv.mlproject17.CreditApp.services;
 
 import lv.mlproject17.CreditApp.api.Error;
-import lv.mlproject17.CreditApp.api.Response;
+import lv.mlproject17.CreditApp.api.ViewLoansResponse;
 import lv.mlproject17.CreditApp.authentication.LoginUser;
 import lv.mlproject17.CreditApp.database.model.ExtendedLoans;
 import lv.mlproject17.CreditApp.database.model.Loan;
@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by marko on 2017.12.08..
- */
 @Service
 public class ViewLoansService {
 	@Autowired
@@ -28,13 +25,12 @@ public class ViewLoansService {
 	@Autowired
 	ViewLoansValidator validator;
 
-//	public List<ViewUserLoansDTO> viewCustomerLoans(){
-	public Response viewCustomerLoans(){
+	public ViewLoansResponse viewCustomerLoans(){
 
 		List<Error> validationError = validator.validateViewLoans(LoginUser.logInId());
 
 		if(!validationError.isEmpty()){
-			return Response.failResponse(validationError);
+			return ViewLoansResponse.failResponse(validationError);
 		}
 
 		List<Loan> userLoans = loanRepository.getLoansByCustomerId(LoginUser.logInId());
@@ -44,9 +40,9 @@ public class ViewLoansService {
 			ViewUserLoansDTO nextLoanDto = new ViewUserLoansDTO();
 
 			nextLoanDto.setAmount(userLoan.getAmount());
-			nextLoanDto.setPassingTerm(userLoan.getPassingTerm());
+			nextLoanDto.setPassingTermDays(userLoan.getPassingTermDays());
 			nextLoanDto.setLoanIssueDate(userLoan.getIssueDate());
-			nextLoanDto.setLoanReturnState(userLoan.getLoanReturnState());
+			nextLoanDto.setLoanReturnState(userLoan.getLoanRepayState());
 			if(userLoan.isLoanExtended()){
 				List<ExtendedLoans> extLoans =
 						extendedLoanRepository.findAllUserExtendedLoans(userLoan.getId());
@@ -63,6 +59,6 @@ public class ViewLoansService {
 			}
 			userLoansDTO.add(nextLoanDto);
 		}
-		return Response.viewLoansResponse(userLoansDTO);
+		return ViewLoansResponse.successResponse(userLoansDTO);
 	}
 }

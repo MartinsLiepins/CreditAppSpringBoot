@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class ExtendTermService {
 			return Response.failResponse(validationError);
 		}
 
-		Long id = loanRepository.getLastUserLoanIdByCustomerId(LoginUser.logInId());
+		Long id = loanRepository.getLastLoanIdByCustomerId(LoginUser.logInId());
 		LoanDTO loanDto = buildLoanDto(loanRepository.getLoanByLoanId(id));
 
 		if(loanDto.isLoanExtended()){
@@ -65,17 +66,16 @@ public class ExtendTermService {
 		dto.setLoanExtended(loan.isLoanExtended());
 		dto.setAmount(loan.getAmount());
 		dto.setId(loan.getId());
-		dto.setLoanReturnState(loan.getLoanReturnState());
+		dto.setLoanReturnState(loan.getLoanRepayState());
 		return dto;
 	}
 
 	private ExtendedLoans buildExtendedLoan(LoanDTO dto, int extendTermWeeks){
 		ExtendedLoans extLoan = new ExtendedLoans();
-		String dateTime = dateAndTime.getDateAndTimeString();
 		extLoan.setExtendedAmount(calcAmountWithPercentsPerWeek(dto.getAmount(), extendTermWeeks));
 		extLoan.setExtendTermWeeks(extendTermWeeks);
 		extLoan.setLoanId(dto.getId());
-		extLoan.setExtendPassingTermDate(dateTime);
+		extLoan.setExtendPassingTermDate(LocalDateTime.now());
 		return extLoan;
 	}
 

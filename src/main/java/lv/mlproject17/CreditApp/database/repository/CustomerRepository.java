@@ -14,16 +14,16 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
-	@Query("SELECT id FROM Customer c WHERE c.name = :name and c.password = :password")
-	Optional<Long> findIdByPasswordAndName(@Param("name") String name,
-	                                       @Param("password") String password);
+	@Query("SELECT id FROM Customer c WHERE c.email = :email and c.password = :password")
+	Optional<Long> findIdByPasswordAndEmail(@Param("email") String email,
+	                                        @Param("password") String password);
 
-	@Query("SELECT id FROM Customer c WHERE c.name = :name and c.password = :password")
-	Long getIdByPasswordAndName(@Param("name") String name,
-	                                     @Param("password") String password);
+	@Query("SELECT id FROM Customer c WHERE c.email = :email and c.password = :password")
+	Long getIdByPasswordAndEmail(@Param("email") String email,
+	                             @Param("password") String password);
 
-	@Query("SELECT name FROM Customer c WHERE c.name = :loginName")
-	Optional<String> findNameByLoginName(@Param("loginName") String loginName);
+	@Query("SELECT email FROM Customer c WHERE c.email = :loginEmail")
+	Optional<String> findNameByLoginEmail(@Param("loginEmail") String loginEmail);
 
 	Customer save(Customer newCustomer);
 }

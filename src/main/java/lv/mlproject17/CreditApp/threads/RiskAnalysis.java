@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
-/**
- * Created by marko on 2017.12.12..
- */
-//@Service
 @Component
 public class RiskAnalysis {
 
@@ -19,8 +15,6 @@ public class RiskAnalysis {
 	private LoanRepository loanRepository;
 	@Autowired
 	private LoanApplicationRepository loanApplicationRepository;
-	@Autowired
-	DateAndTime dateAndTime;
 
 	private final BigDecimal MAX_FIRST_LOAN_AMOUNT = new BigDecimal(400);
 	private final BigDecimal MAX_LOAN_AMOUNT = new BigDecimal(1500);
@@ -42,26 +36,26 @@ public class RiskAnalysis {
 		Long applicationId = loanApplicationRepository.
 				getLastUserLoanApplicationIdByCustomerId(dtoIn.getCustomerId());
 		Long loanId = loanRepository.
-				getLastUserLoanIdByCustomerId(dtoIn.getCustomerId());
+				getLastLoanIdByCustomerId(dtoIn.getCustomerId());
 
 		if(loanId != null){
-			if(!loanRepository.getLoansReturnStateByLoanId(loanId)){
+			if(!loanRepository.getLoansRepayStateByLoanId(loanId)){
 				dtoOut.setState(LoanApplicationState.REJECTED);
 				dtoOut.setLoanApplicationId(applicationId);
 				dtoOut.setCustomerId(dtoIn.getCustomerId());
 				return dtoOut;
 			}
 
-			if((dateAndTime.getHourFromString(dtoIn.getDate()) >= TIME_FROM) &&
-					(dateAndTime.getHourFromString(dtoIn.getDate())<= TIME_TO)){
+			if((dtoIn.getDate().getHour() >= TIME_FROM) &&
+					(dtoIn.getDate().getHour()<= TIME_TO)){
 				maxAmount = MAX_LOAN_AMOUNT_IN_NIGHT;
 			}else{
 				maxAmount = MAX_LOAN_AMOUNT;
 			}
 			interestFactor = LOAN_INTEREST_FACTOR_DAY;
 		}else{
-			if((dateAndTime.getHourFromString(dtoIn.getDate()) >= TIME_FROM) &&
-					(dateAndTime.getHourFromString(dtoIn.getDate())<= TIME_TO)){
+			if((dtoIn.getDate().getHour() >= TIME_FROM) &&
+					(dtoIn.getDate().getHour()<= TIME_TO)){
 				maxAmount = MAX_FIRST_LOAN_AMOUNT_IN_NIGHT;
 			}else{
 				maxAmount =  MAX_FIRST_LOAN_AMOUNT;
@@ -73,19 +67,19 @@ public class RiskAnalysis {
 			dtoOut.setAmount(dtoIn.getAmount().add
 					(dtoIn.getAmount()
 							.multiply(interestFactor)
-							.multiply(new BigDecimal(dtoIn.getPassingTerm()))));
+							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
 			dtoOut.setCustomerId(dtoIn.getCustomerId());
 			dtoOut.setLoanApplicationId(applicationId);
-			dtoOut.setPassingTerm(dtoIn.getPassingTerm());
+			dtoOut.setPassingTermDays(dtoIn.getPassingTermDays());
 			dtoOut.setState(LoanApplicationState.APPROVED);
 		}else{
 			dtoOut.setAmount(maxAmount.add
 					(maxAmount
 							.multiply(interestFactor)
-							.multiply(new BigDecimal(dtoIn.getPassingTerm()))));
+							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
 			dtoOut.setCustomerId(dtoIn.getCustomerId());
 			dtoOut.setLoanApplicationId(applicationId);
-			dtoOut.setPassingTerm(dtoIn.getPassingTerm());
+			dtoOut.setPassingTermDays(dtoIn.getPassingTermDays());
 			dtoOut.setState(LoanApplicationState.APPROVED_WITH_CONDITIONS);
 		}
 		return dtoOut;

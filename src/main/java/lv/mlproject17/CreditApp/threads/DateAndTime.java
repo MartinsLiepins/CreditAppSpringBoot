@@ -16,19 +16,15 @@ public class DateAndTime {
 
 		LocalDateTime timeNow = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String dateTime = timeNow.format(formatter);
-		return dateTime;
+//		String dateTime = timeNow.format(formatter);
+		return timeNow.format(formatter);
 	}
 
 	public int getHourFromString(String dateTime){
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		LocalDateTime localDateTime = LocalDateTime.parse(dateTime, formatter);
-		int hour = localDateTime.getHour();
+//		int hour = localDateTime.getHour();
 
-		return hour;
+		return localDateTime.getHour();
 	}
-
-
-
-
 }

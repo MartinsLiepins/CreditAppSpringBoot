@@ -12,7 +12,6 @@ public class Response {
 	private boolean success;
 	private List<Error> errors;
 	private List<Warning> warnings;
-	private List<ViewUserLoansDTO> viewLoansList;
 
 	public static Response successResponse(List<Warning> warnings){
 		return new Response(true, null, warnings);
@@ -22,18 +21,14 @@ public class Response {
 		return new Response(false, errors, null);
 	}
 
-	public static Response viewLoansResponse(List<ViewUserLoansDTO> viewLoansList){
-	return new Response(viewLoansList);
-	}
-
 	public Response(boolean success, List<Error> errors, List<Warning> warnings){
 		this.success = success;
 		this.errors = errors;
 		this.warnings = warnings;
 	}
 
-	public Response(List<ViewUserLoansDTO> viewList){
-		this.viewLoansList = viewList;
+	public Response(boolean success, List<ViewUserLoansDTO> viewList){
+		this.success = success;
 	}
 
 	public List<Error> getErrors(){
@@ -42,14 +37,11 @@ public class Response {
 	public List<Warning> getWarnings(){
 		return warnings;
 	}
-	public List<ViewUserLoansDTO> getViewLoansList(){
-		return viewLoansList;
-	}
 
-	public boolean isSuccess(){
+	public boolean getSuccess(){
 		return success;
 	}
-	public boolean isFail(){
+	public boolean getFail(){
 		return !success;
 	}
 }

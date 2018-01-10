@@ -5,10 +5,10 @@ import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.database.model.Customer;
 import lv.mlproject17.CreditApp.database.repository.CustomerRepository;
 import lv.mlproject17.CreditApp.services.validators.RegisterCustomerValidator;
-import lv.mlproject17.CreditApp.threads.DateAndTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -20,27 +20,25 @@ public class RegisterCustomerService {
 	@Autowired
 	private CustomerRepository customerRepository;
 	@Autowired
-	private DateAndTime dateAndTime;
-	@Autowired
 	private RegisterCustomerValidator validator;
 
-	public Response registerUser(String name, String password){
+	public Response registerUser(String email, String password){
 
-		List<Error> validationError = validator.validate(name, password);
+		List<Error> validationError = validator.validate(email, password);
 
 		if(!validationError.isEmpty()){
 			return Response.failResponse(validationError);
 		}
-		customerRepository.save(customerBuilder(name, password));
+		customerRepository.save(customerBuilder(email, password));
 		return Response.successResponse(null);
 	}
 
 
-	private Customer customerBuilder(String name, String password){
+	private Customer customerBuilder(String email, String password){
 		Customer customer = new Customer();
-		customer.setName(name);
+		customer.setEmail(email);
 		customer.setPassword(password);
-		customer.setRegistrationDate(dateAndTime.getDateAndTimeString());
+		customer.setRegistrationDate(LocalDateTime.now());
 		return customer;
 	}
 

@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by marko on 2017.12.22..
- */
-
 @Component
 public class LoginValidator {
 
@@ -29,7 +25,7 @@ public class LoginValidator {
 
 	private Optional<Error> validateLogin(String name){
 		if (name == null || name.equals("")) {
-			return Optional.of(new Error("login", "Login must be not empty"));
+			return Optional.of(new Error("login", "Login must by not empty"));
 		}else{
 			return Optional.empty();
 		}
@@ -37,9 +33,9 @@ public class LoginValidator {
 
 	private Optional<Error> validatePassword(String password){
 		if (password == null || password.equals("")){
-			return Optional.of(new Error("password", "Password must be not empty"));
+			return Optional.of(new Error("password", "Password must by not empty"));
 		}else if (password.length() < 4){
-			return Optional.of(new Error("password", "Password must be not shorter than 4 symbols"));
+			return Optional.of(new Error("password", "Password must by not shorter than 4 symbols"));
 		}else{
 			return Optional.empty();
 		}
@@ -54,6 +50,6 @@ public class LoginValidator {
 	}
 
 	private boolean notExist(String name, String password){
-		return (!customerRepository.findIdByPasswordAndName(name,password).isPresent());
+		return (!customerRepository.findIdByPasswordAndEmail(name,password).isPresent());
 	}
 }

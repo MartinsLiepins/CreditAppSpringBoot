@@ -20,15 +20,14 @@ public class LoginService {
 	@Autowired
 	private LoginValidator validator;
 
-
-	public Response logIn(String name, String password){
-		List<Error> validationError = validator.validate(name, password);
+	public Response logIn(String email, String password){
+		List<Error> validationError = validator.validate(email, password);
 
 		if(!validationError.isEmpty()){
 			return Response.failResponse(validationError);
 		}
 
-		LoginUser loginUser = new LoginUser(customerRepository.getIdByPasswordAndName(name,password));
+		LoginUser loginUser = new LoginUser(customerRepository.getIdByPasswordAndEmail(email,password));
 
 		return Response.successResponse(null);
 	}

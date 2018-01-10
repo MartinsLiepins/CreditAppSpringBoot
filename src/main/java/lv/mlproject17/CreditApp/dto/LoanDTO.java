@@ -1,6 +1,7 @@
 package lv.mlproject17.CreditApp.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * Created by marko on 2017.12.19..
@@ -9,9 +10,9 @@ public class LoanDTO {
 	private Long id;
 	private Long customerId;
 	private BigDecimal amount;
-	private int passingTerm;
+	private int passingTermDays;
 	private boolean loanExtended;
-	private String issueDate;
+	private LocalDateTime issueDate;
 	private boolean loanReturnState;
 
 	public LoanDTO(){}
@@ -25,13 +26,13 @@ public class LoanDTO {
 	public BigDecimal getAmount(){
 		return amount;
 	}
-	public int getPassingTerm(){
-		return passingTerm;
+	public int getPassingTermDays(){
+		return passingTermDays;
 	}
 	public boolean isLoanExtended(){
 		return loanExtended;
 	}
-	public String getIssueDate(){
+	public LocalDateTime getIssueDate(){
 		return issueDate;
 	}
 	public boolean getLoanReturnState(){
@@ -47,13 +48,13 @@ public class LoanDTO {
 	public void setAmount(BigDecimal amount){
 		this.amount = amount;
 	}
-	public void setPassingTerm(int passingTerm){
-		this.passingTerm = passingTerm;
+	public void setPassingTermDays(int passingTermDays){
+		this.passingTermDays = passingTermDays;
 	}
 	public void setLoanExtended(boolean loanExtended){
 		this.loanExtended = loanExtended;
 	}
-	public void setIssueDate(String issueDate){
+	public void setIssueDate(LocalDateTime issueDate){
 		this.issueDate = issueDate;
 	}
 	public void setLoanReturnState(boolean loanReturnState){

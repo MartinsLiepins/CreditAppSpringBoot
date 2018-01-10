@@ -1,6 +1,7 @@
 package lv.mlproject17.CreditApp.controller;
 
 import lv.mlproject17.CreditApp.api.Response;
+import lv.mlproject17.CreditApp.api.ViewLoansResponse;
 import lv.mlproject17.CreditApp.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,51 +26,57 @@ public class RestApiController {
 	@Autowired
 	private ViewLoansService viewLoansService;
 	@Autowired
-	private ReturnLoanService returnLoanService;
+	private RepayLoanService repayLoanService;
 
 
 	@GetMapping(path="/register")
 	@ResponseBody
 	Response registerNewCustomer
-			(@RequestParam(value = "name") String name,
+			(@RequestParam(value = "email") String email,
 			 @RequestParam(value ="password") String password){
-		return registerCustomerService.registerUser(name, password);
+		return registerCustomerService.registerUser(email, password);
 	}
+//	@PostMapping(path="/register")
+//	@ResponseBody
+//	Response registerNewCustomer(
+//			@RequestBody String email, String password){
+//		return registerCustomerService.registerUser(email, password);
+//	}
 
 	@GetMapping(path="/login")
 	@ResponseBody
 	Response logIn
-			(@RequestParam(value = "name") String name,
+			(@RequestParam(value = "email") String email,
 			 @RequestParam(value = "password") String password){
-		return loginService.logIn(name, password);
+		return loginService.logIn(email, password);
 	}
 
 	@GetMapping(path="/login/loan")
 	@ResponseBody
-	Response takeLoan
-			(@RequestParam(value = "loanAmount")BigDecimal loanAmount,
-			 @RequestParam(value = "passingTerm") int passingTerm){
-		return takeLoanService.takeLoan(loanAmount, passingTerm);
+	Response takeLoan(
+			@RequestParam(value = "loanAmount")BigDecimal loanAmount,
+			@RequestParam(value = "passingTermDays") int passingTermDays){
+		return takeLoanService.takeLoan(loanAmount, passingTermDays);
 	}
 
 	@GetMapping(path="/login/extendLoan")
 	@ResponseBody
-	Response extendLoan
-			(@RequestParam(value = "extendTermWeeks") int extendTermWeeks){
+	Response extendLoan(
+			@RequestParam(value = "extendTermWeeks") int extendTermWeeks){
 		return extendTermService.extendLastUserLoan(extendTermWeeks);
 	}
 
 	@RequestMapping(path="/login/viewLoans")
 	@ResponseBody
-	Response viewLoans(){
+	ViewLoansResponse viewLoans(){
 				return viewLoansService.viewCustomerLoans();
 			}
 
-	@GetMapping(path="/login/returnLoan")
+	@GetMapping(path="/login/repayLoan")
 	@ResponseBody
-	Response returnLoan
-			(@RequestParam(value = "returnAmount") BigDecimal returnAmount){
-		return returnLoanService.returnLoan(returnAmount);
+	Response repayLoan
+			(@RequestParam(value = "repayAmount") BigDecimal repayAmount){
+		return repayLoanService.returnLoan(repayAmount);
 	}
 }
 
