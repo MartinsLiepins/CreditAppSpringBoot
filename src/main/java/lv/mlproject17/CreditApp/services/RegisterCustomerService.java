@@ -24,12 +24,14 @@ public class RegisterCustomerService {
 
 	public Response registerUser(String email, String password){
 
-		List<Error> validationError = validator.validate(email, password);
+		List<Error> validationError = validator.validate(
+				email, password);
 
 		if(!validationError.isEmpty()){
 			return Response.failResponse(validationError);
 		}
-		customerRepository.save(customerBuilder(email, password));
+		customerRepository.save(customerBuilder(
+				email, password));
 		return Response.successResponse(null);
 	}
 
