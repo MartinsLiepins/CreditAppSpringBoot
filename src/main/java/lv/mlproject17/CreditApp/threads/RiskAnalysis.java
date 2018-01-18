@@ -34,7 +34,7 @@ public class RiskAnalysis {
 		BigDecimal interestFactor;
 
 		Long applicationId = loanApplicationRepository.
-				getLastUserLoanApplicationIdByCustomerId(dtoIn.getCustomerId());
+				getLastApplicationIdByCustomerId(dtoIn.getCustomerId());
 		Long loanId = loanRepository.
 				getLastLoanIdByCustomerId(dtoIn.getCustomerId());
 
@@ -52,7 +52,7 @@ public class RiskAnalysis {
 			}else{
 				maxAmount = MAX_LOAN_AMOUNT;
 			}
-			interestFactor = LOAN_INTEREST_FACTOR_DAY;
+//			interestFactor = LOAN_INTEREST_FACTOR_DAY;
 		}else{
 			if((dtoIn.getDate().getHour() >= TIME_FROM) &&
 					(dtoIn.getDate().getHour()<= TIME_TO)){
@@ -60,27 +60,31 @@ public class RiskAnalysis {
 			}else{
 				maxAmount =  MAX_FIRST_LOAN_AMOUNT;
 			}
-			interestFactor = FIRST_LOAN_INTEREST_FACTOR_DAY;
+//			interestFactor = FIRST_LOAN_INTEREST_FACTOR_DAY;
 		}
 
-		if(dtoIn.getAmount().compareTo(maxAmount) <= 0){
-			dtoOut.setAmount(dtoIn.getAmount().add
-					(dtoIn.getAmount()
-							.multiply(interestFactor)
-							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
+		if(dtoIn.getApplicationAmount().compareTo(maxAmount) <= 0){
+			dtoOut.setApplicationAmount(dtoIn.getApplicationAmount());
+			dtoOut.setApprovedAmount(dtoIn.getApplicationAmount());
+//			dtoOut.setApplicationAmount(dtoIn.getApplicationAmount().add
+//					(dtoIn.getApplicationAmount()
+//							.multiply(interestFactor)
+//							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
 			dtoOut.setCustomerId(dtoIn.getCustomerId());
 			dtoOut.setLoanApplicationId(applicationId);
 			dtoOut.setPassingTermDays(dtoIn.getPassingTermDays());
 			dtoOut.setState(LoanApplicationState.APPROVED);
 		}else{
-			dtoOut.setAmount(maxAmount.add
-					(maxAmount
-							.multiply(interestFactor)
-							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
+			dtoOut.setApplicationAmount(dtoIn.getApplicationAmount());
+			dtoOut.setApprovedAmount(maxAmount);
+//			dtoOut.setApplicationAmount(maxAmount.add
+//					(maxAmount
+//							.multiply(interestFactor)
+//							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
 			dtoOut.setCustomerId(dtoIn.getCustomerId());
 			dtoOut.setLoanApplicationId(applicationId);
 			dtoOut.setPassingTermDays(dtoIn.getPassingTermDays());
-			dtoOut.setState(LoanApplicationState.APPROVED_WITH_CONDITIONS);
+			dtoOut.setState(LoanApplicationState.IN_PROCESSING);
 		}
 		return dtoOut;
 	}

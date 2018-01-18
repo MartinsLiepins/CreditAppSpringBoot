@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Created by marko on 2017.12.12..
  */
@@ -23,8 +25,18 @@ public interface LoanApplicationRepository extends CrudRepository<LoanApplicatio
 	int updateApplicationState(@Param("status") String Status,
 							   @Param("id") Long applicationId);
 
+//	@Modifying
+//	@Transactional
+//	@Query("UPDATE LoanApplication x SET x = :updateData" +
+//			" WHERE x.applicationId = :id")
+//	boolean updateApplicationState(@Param("updateData") LoanApplication application,
+//	                           @Param("id") Long applicationId);
+
 	@Query("SELECT MAX(id) FROM LoanApplication l WHERE l.customerId = :id")
-	Long getLastUserLoanApplicationIdByCustomerId(@Param("id") Long customerId);
+	Optional<LoanApplication> getLastApplicationByCustomerId(@Param("id") Long customerId);
+
+	@Query("SELECT MAX(id) FROM LoanApplication l WHERE l.customerId = :id")
+	Long getLastApplicationIdByCustomerId(@Param("id") Long customerId);
 
 
 }

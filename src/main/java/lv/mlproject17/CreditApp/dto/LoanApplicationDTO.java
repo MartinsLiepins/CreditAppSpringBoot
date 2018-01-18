@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public class LoanApplicationDTO {
 	private Long loanApplicationId;
 	private Long customerId;
-	private BigDecimal amount;
+	private BigDecimal applicationAmount;
+	private BigDecimal approvedAmount;
 	private int passingTermDays;
 	private LoanApplicationState state;
 	private LocalDateTime date;
@@ -18,7 +19,7 @@ public class LoanApplicationDTO {
 
 	public LoanApplicationDTO(BigDecimal amount, int passingTermDays, LocalDateTime date,
 	                          Long customerId){
-		this.amount = amount;
+		this.applicationAmount = amount;
 		this.passingTermDays = passingTermDays;
 		this.customerId = customerId;
 		this.date = date;
@@ -30,8 +31,11 @@ public class LoanApplicationDTO {
 	public Long getCustomerId(){
 		return customerId;
 	}
-	public BigDecimal getAmount(){
-		return amount;
+	public BigDecimal getApplicationAmount(){
+		return applicationAmount;
+	}
+	public BigDecimal getApprovedAmount(){
+		return approvedAmount;
 	}
 	public int getPassingTermDays(){
 		return passingTermDays;
@@ -49,8 +53,11 @@ public class LoanApplicationDTO {
 	public void setCustomerId(Long customerId){
 		this.customerId = customerId;
 	}
-	public void setAmount(BigDecimal amount){
-		this.amount = amount;
+	public void setApplicationAmount(BigDecimal applicationAmount){
+		this.applicationAmount = applicationAmount;
+	}
+	public void setApprovedAmount(BigDecimal approvedAmount){
+		this.approvedAmount = approvedAmount;
 	}
 	public void setPassingTermDays(int passingTermDays){
 		this.passingTermDays = passingTermDays;
@@ -61,4 +68,5 @@ public class LoanApplicationDTO {
 	public void setDate(LocalDateTime date){
 		this.date = date;
 	}
+
 }

@@ -10,7 +10,6 @@ import lv.mlproject17.CreditApp.database.repository.LoanRepository;
 import lv.mlproject17.CreditApp.dto.LoanDTO;
 import lv.mlproject17.CreditApp.services.validators.ExtendTermValidator;
 import lv.mlproject17.CreditApp.services.validators.ServiceErrorMessageBuilder;
-import lv.mlproject17.CreditApp.threads.DateAndTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +29,6 @@ public class ExtendTermService {
 	private ExtendTermValidator validator;
 	@Autowired
 	private ServiceErrorMessageBuilder serviceErrorMessageBuilder;
-	@Autowired
-	private DateAndTime dateAndTime;
 
 	public Response extendLastUserLoan(int extendTermWeeks){
 

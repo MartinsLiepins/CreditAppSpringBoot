@@ -4,10 +4,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Created by marko on 2017.12.12..
- */
-
 @Entity
 @Table(name = "loan_application")
 public class LoanApplication {
@@ -21,6 +17,9 @@ public class LoanApplication {
 
 	@Column(nullable = false, name = "application_amount")
 	private BigDecimal applicationAmount;
+
+	@Column(nullable = false, name = "approved_amount")
+	private BigDecimal approvedAmount;
 
 	@Column(nullable = false, length = 5, name = "passing_term_days")
 	private int passingTermDays;
@@ -37,8 +36,14 @@ public class LoanApplication {
 	public Long getApplicationId(){
 		return applicationId;
 	}
+	public Long getCustomerId(){
+		return customerId;
+	}
 	public BigDecimal getApplicationAmount(){
 		return applicationAmount;
+	}
+	public BigDecimal getApprovedAmount(){
+		return approvedAmount;
 	}
 	public int getPassingTermDays(){
 		return passingTermDays;
@@ -49,15 +54,18 @@ public class LoanApplication {
 	public LocalDateTime getApplicationDate(){
 		return LocalDateTime.parse(applicationDate);
 	}
-	public Long getCustomerId(){
-		return customerId;
-	}
 
+	public void setApplicationId(Long applicationId){
+		this.applicationId = applicationId;
+	}
 	public void setCustomerId(Long customerId){
 		this.customerId = customerId;
 	}
 	public void setApplicationAmount(BigDecimal applicationAmount){
 		this.applicationAmount = applicationAmount;
+	}
+	public void setApprovedAmount(BigDecimal approvedAmount){
+		this.approvedAmount = approvedAmount;
 	}
 	public void setPassingTermDays(int passingTermDays){
 		this.passingTermDays = passingTermDays;
@@ -67,8 +75,5 @@ public class LoanApplication {
 	}
 	public void setApplicationDate(LocalDateTime applicationDate){
 		this.applicationDate = applicationDate.toString();
-	}
-	public void setApplicationId(Long applicationId){
-		this.applicationId = applicationId;
 	}
 }
