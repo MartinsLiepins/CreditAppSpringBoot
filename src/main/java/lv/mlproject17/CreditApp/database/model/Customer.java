@@ -9,14 +9,14 @@ import java.time.LocalDateTime;
  */
 
 @Entity
-@Table(name = "customers")
+@Table(name = "customer")
 public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "customer_id")
+	@Column(name = "id")
 	private Long id;
 
-	@Column(nullable = false, length = 20, name = "login_email")
+	@Column(nullable = false, length = 20, name = "email")
 	private String email;
 
 	@Column(nullable = false, name = "password")
@@ -54,5 +54,4 @@ public class Customer {
 	public void setRegistrationDate(LocalDateTime registrationDate){
 		this.registrationDate = registrationDate.toString();
 	}
-
 }

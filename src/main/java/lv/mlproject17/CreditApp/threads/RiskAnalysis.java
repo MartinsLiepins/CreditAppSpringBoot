@@ -1,12 +1,16 @@
 package lv.mlproject17.CreditApp.threads;
 
-import lv.mlproject17.CreditApp.database.repository.LoanApplicationRepository;
+import lv.mlproject17.CreditApp.database.model.Application;
+import lv.mlproject17.CreditApp.database.model.Loan;
+import lv.mlproject17.CreditApp.database.repository.ApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
-import lv.mlproject17.CreditApp.dto.LoanApplicationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+
+import static lv.mlproject17.CreditApp.database.model.builders.ApplicationBuilder.createApplication;
 
 @Component
 public class RiskAnalysis {
@@ -14,7 +18,7 @@ public class RiskAnalysis {
 	@Autowired
 	private LoanRepository loanRepository;
 	@Autowired
-	private LoanApplicationRepository loanApplicationRepository;
+	private ApplicationRepository applicationRepository;
 
 	private final BigDecimal MAX_FIRST_LOAN_AMOUNT = new BigDecimal(400);
 	private final BigDecimal MAX_LOAN_AMOUNT = new BigDecimal(1500);
@@ -26,66 +30,62 @@ public class RiskAnalysis {
 	private final int TIME_TO = 6;
 	private final int  MAX_APPLICATION_FROM_IP_IN_DAY = 3;
 
-	public LoanApplicationDTO loanApplicationAnalysis(LoanApplicationDTO dtoIn){
-
-		LoanApplicationDTO dtoOut = new LoanApplicationDTO();
+	public Application applicationAnalysis(Application applicationIn){
 
 		BigDecimal maxAmount;
 		BigDecimal interestFactor;
 
-		Long applicationId = loanApplicationRepository.
-				getLastApplicationIdByCustomerId(dtoIn.getCustomerId());
-		Long loanId = loanRepository.
-				getLastLoanIdByCustomerId(dtoIn.getCustomerId());
+		Optional<Loan> lastLoanOpt = loanRepository.
+				findFirstByCustomerIdOrderByIdDesc(applicationIn.getCustomerId());
 
-		if(loanId != null){
-			if(!loanRepository.getLoansRepayStateByLoanId(loanId)){
-				dtoOut.setState(LoanApplicationState.REJECTED);
-				dtoOut.setLoanApplicationId(applicationId);
-				dtoOut.setCustomerId(dtoIn.getCustomerId());
-				return dtoOut;
+		if(lastLoanOpt.isPresent()){
+			if(!lastLoanOpt.get().getLoanRepayState()){
+				return createApplication()
+						.withCustomerId(applicationIn.getCustomerId())
+						.withApplicationAmount(applicationIn.getApplicationAmount())
+						.withApprovedAmount(new BigDecimal(0.00))
+						.withPassingTermDays(applicationIn.getPassingTermDays())
+						.withApplicationStatus(ApplicationStatus.REJECTED)
+						.withDate(applicationIn.getApplicationDate())
+						.build();
 			}
-
-			if((dtoIn.getDate().getHour() >= TIME_FROM) &&
-					(dtoIn.getDate().getHour()<= TIME_TO)){
+			if((applicationIn.getApplicationDate().getHour() >= TIME_FROM) &&
+					(applicationIn.getApplicationDate().getHour()<= TIME_TO)){
 				maxAmount = MAX_LOAN_AMOUNT_IN_NIGHT;
 			}else{
 				maxAmount = MAX_LOAN_AMOUNT;
 			}
-//			interestFactor = LOAN_INTEREST_FACTOR_DAY;
+			interestFactor = LOAN_INTEREST_FACTOR_DAY;
 		}else{
-			if((dtoIn.getDate().getHour() >= TIME_FROM) &&
-					(dtoIn.getDate().getHour()<= TIME_TO)){
+			if((applicationIn.getApplicationDate().getHour() >= TIME_FROM) &&
+					(applicationIn.getApplicationDate().getHour()<= TIME_TO)){
 				maxAmount = MAX_FIRST_LOAN_AMOUNT_IN_NIGHT;
 			}else{
 				maxAmount =  MAX_FIRST_LOAN_AMOUNT;
 			}
-//			interestFactor = FIRST_LOAN_INTEREST_FACTOR_DAY;
+			interestFactor = FIRST_LOAN_INTEREST_FACTOR_DAY;
 		}
 
-		if(dtoIn.getApplicationAmount().compareTo(maxAmount) <= 0){
-			dtoOut.setApplicationAmount(dtoIn.getApplicationAmount());
-			dtoOut.setApprovedAmount(dtoIn.getApplicationAmount());
-//			dtoOut.setApplicationAmount(dtoIn.getApplicationAmount().add
-//					(dtoIn.getApplicationAmount()
-//							.multiply(interestFactor)
-//							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
-			dtoOut.setCustomerId(dtoIn.getCustomerId());
-			dtoOut.setLoanApplicationId(applicationId);
-			dtoOut.setPassingTermDays(dtoIn.getPassingTermDays());
-			dtoOut.setState(LoanApplicationState.APPROVED);
+		if(applicationIn.getApplicationAmount().compareTo(maxAmount) <= 0){
+			return createApplication()
+					.withCustomerId(applicationIn.getCustomerId())
+					.withApplicationAmount(applicationIn.getApplicationAmount())
+					.withApprovedAmount(applicationIn.getApplicationAmount())
+					.withPassingTermDays(applicationIn.getPassingTermDays())
+					.withApplicationStatus(ApplicationStatus.APPROVED)
+					.withInterestFactor(interestFactor)
+					.withDate(applicationIn.getApplicationDate())
+					.build();
 		}else{
-			dtoOut.setApplicationAmount(dtoIn.getApplicationAmount());
-			dtoOut.setApprovedAmount(maxAmount);
-//			dtoOut.setApplicationAmount(maxAmount.add
-//					(maxAmount
-//							.multiply(interestFactor)
-//							.multiply(new BigDecimal(dtoIn.getPassingTermDays()))));
-			dtoOut.setCustomerId(dtoIn.getCustomerId());
-			dtoOut.setLoanApplicationId(applicationId);
-			dtoOut.setPassingTermDays(dtoIn.getPassingTermDays());
-			dtoOut.setState(LoanApplicationState.IN_PROCESSING);
+			return createApplication()
+					.withCustomerId(applicationIn.getCustomerId())
+					.withApplicationAmount(applicationIn.getApplicationAmount())
+					.withApprovedAmount(maxAmount)
+					.withPassingTermDays(applicationIn.getPassingTermDays())
+					.withApplicationStatus(ApplicationStatus.IN_PROCESSING)
+					.withInterestFactor(interestFactor)
+					.withDate(applicationIn.getApplicationDate())
+					.build();
 		}
-		return dtoOut;
 	}
 }

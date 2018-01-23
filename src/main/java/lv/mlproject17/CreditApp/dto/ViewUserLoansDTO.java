@@ -1,5 +1,7 @@
 package lv.mlproject17.CreditApp.dto;
 
+import lv.mlproject17.CreditApp.database.model.ExtendedLoans;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +17,7 @@ public class ViewUserLoansDTO {
 	private int passingTermDays;
 	private LocalDateTime loanIssueDate;
 	private boolean loanReturnState;
-	private List<ExtendedLoansDTO> extendedLoans;
+	private List<ExtendedLoans> extendedLoans;
 
 	public ViewUserLoansDTO(){}
 
@@ -34,7 +36,7 @@ public class ViewUserLoansDTO {
 	public void setLoanReturnState(boolean loanReturnState){
 		this.loanReturnState = loanReturnState;
 	}
-	public void setExtendedLoans(List<ExtendedLoansDTO> loanIsExtended){
+	public void setExtendedLoans(List<ExtendedLoans> loanIsExtended){
 		this.extendedLoans = loanIsExtended;
 	}
 
@@ -53,7 +55,7 @@ public class ViewUserLoansDTO {
 	public boolean getLoanReturnState(){
 		return loanReturnState;
 	}
-	public List<ExtendedLoansDTO> getExtendedLoans(){
+	public List<ExtendedLoans> getExtendedLoans(){
 		return extendedLoans;
 	}
 }

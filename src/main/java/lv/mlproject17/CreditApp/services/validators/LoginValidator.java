@@ -41,15 +41,15 @@ public class LoginValidator {
 		}
 	}
 
-	private Optional<Error> validateCustomer(String name, String password){
-		if(notExist(name, password)){
+	private Optional<Error> validateCustomer(String email, String password){
+		if(notExist(email, password)){
 			return Optional.of(new Error("name, password", "Incorrect name or password"));
 		}else{
 			return Optional.empty();
 		}
 	}
 
-	private boolean notExist(String name, String password){
-		return (!customerRepository.findIdByPasswordAndEmail(name,password).isPresent());
+	private boolean notExist(String email, String password){
+		return (!customerRepository.findCustomerByEmailAndPassword(email,password).isPresent());
 	}
 }

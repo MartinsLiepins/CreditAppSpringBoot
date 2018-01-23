@@ -4,10 +4,9 @@ import lv.mlproject17.CreditApp.api.Error;
 import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.authentication.LoginUser;
 import lv.mlproject17.CreditApp.database.model.Loan;
+import lv.mlproject17.CreditApp.database.repository.ApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.ExtendedLoanRepository;
-import lv.mlproject17.CreditApp.database.repository.LoanApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
-import lv.mlproject17.CreditApp.dto.LoanDTO;
 import lv.mlproject17.CreditApp.services.validators.RepayLoanValidator;
 import lv.mlproject17.CreditApp.services.validators.ServiceErrorMessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,62 +27,38 @@ public class RepayLoanService {
 	@Autowired
 	private LoanRepository loanRepository;
 	@Autowired
-	private LoanApplicationRepository loanApplicationRepository;
+	private ApplicationRepository applicationRepository;
 	@Autowired
 	private RepayLoanValidator validator;
 	@Autowired
 	private ServiceErrorMessageBuilder serviceErrorMessageBuilder;
 
-	public Response returnLoan(BigDecimal returnAmount){
-		List<Error> validationError = validator.validate(returnAmount, LoginUser.logInId());
+	public Response repayLoan(BigDecimal repayAmount){
+		List<Error> validationError = validator.validate(repayAmount, LoginUser.logInId());
 
 		if(!validationError.isEmpty()){
 			return Response.failResponse(validationError);
 		}
 
-		Long loanId = loanRepository.getLastLoanIdByCustomerId(LoginUser.logInId());
+		Loan loan = loanRepository.findFirstByCustomerIdOrderByIdDesc(
+				LoginUser.logInId()).get();
 
-		LoanDTO loanDto = LoanDtoBuilder(loanRepository.getLoanByLoanId(loanId));
-
-		if(loanDto.isLoanExtended()){
-			loanDto.setAmount(extendedLoanRepository.findExtendedLoanAmount(loanDto.getId()));
-			if(loanDto.getAmount().compareTo(returnAmount) == 0){
-				loanRepository.updateLoanRepayState(true, loanDto.getId());
-				return Response.successResponse(null);
-
-			}else if(loanDto.getAmount().compareTo(returnAmount) == 1){
-				return Response.failResponse
-						(serviceErrorMessageBuilder.buildMessage
-								("Return amount", "Return loan amount is to small, loan is not returned"));
-			}else{
-				return Response.failResponse
-						(serviceErrorMessageBuilder.buildMessage
-								("Return amount", "Return loan amount is to large, loan is not returned"));
-			}
-		}else{
-			if(loanDto.getAmount().compareTo(returnAmount) == 0){
-				loanRepository.updateLoanRepayState(true, loanDto.getId());
-				return Response.successResponse(null);
-
-			}else if(loanDto.getAmount().compareTo(returnAmount) == 1){
-				return Response.failResponse
-						(serviceErrorMessageBuilder.buildMessage
-								("Return amount", "Return loan amount is to small, loan is not returned"));
-			}else{
-				return Response.failResponse
-						(serviceErrorMessageBuilder.buildMessage
-								("Return amount", "Return loan amount is to large, loan is not returned"));
-			}
+		if(loan.isLoanExtended()){
+			loan.setAmount(extendedLoanRepository.findFirstByLoanIdOrderByIdDesc(
+					loan.getId()).getExtendedAmount());
 		}
-	}
+		if(loan.getAmount().compareTo(repayAmount) == 0){
+			loanRepository.updateLoanRepayState(true, loan.getId());
+			return Response.successResponse(null);
 
-	private LoanDTO LoanDtoBuilder(Loan loan){
-		LoanDTO loanDto = new LoanDTO();
-
-		loanDto.setAmount(loan.getAmount());
-		loanDto.setIssueDate(loan.getIssueDate());
-		loanDto.setLoanExtended(loan.isLoanExtended());
-		loanDto.setId(loan.getId());
-		return loanDto;
+		}else if(loan.getAmount().compareTo(repayAmount) == 1){
+			return Response.failResponse
+					(serviceErrorMessageBuilder.buildMessage(
+							"Return amount", "Return loan amount is to small, loan is not returned"));
+		}else{
+			return Response.failResponse(
+					serviceErrorMessageBuilder.buildMessage(
+							"Return amount", "Return loan amount is to large, loan is not returned"));
+		}
 	}
 }

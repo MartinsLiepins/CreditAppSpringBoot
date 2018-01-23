@@ -7,7 +7,6 @@ import lv.mlproject17.CreditApp.database.model.ExtendedLoans;
 import lv.mlproject17.CreditApp.database.model.Loan;
 import lv.mlproject17.CreditApp.database.repository.ExtendedLoanRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
-import lv.mlproject17.CreditApp.dto.ExtendedLoansDTO;
 import lv.mlproject17.CreditApp.dto.ViewUserLoansDTO;
 import lv.mlproject17.CreditApp.services.validators.ViewLoansValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,31 +32,32 @@ public class ViewLoansService {
 			return ViewLoansResponse.failResponse(validationError);
 		}
 
-		List<Loan> userLoans = loanRepository.getLoansByCustomerId(LoginUser.logInId());
+		List<Loan> userLoans = loanRepository.findLoanByCustomerId(LoginUser.logInId()).get();
 		List<ViewUserLoansDTO> userLoansDTO = new ArrayList<>();
 
 		for(Loan userLoan : userLoans){
-			ViewUserLoansDTO nextLoanDto = new ViewUserLoansDTO();
+			ViewUserLoansDTO nextLoan = new ViewUserLoansDTO();
 
-			nextLoanDto.setAmount(userLoan.getAmount());
-			nextLoanDto.setPassingTermDays(userLoan.getPassingTermDays());
-			nextLoanDto.setLoanIssueDate(userLoan.getIssueDate());
-			nextLoanDto.setLoanReturnState(userLoan.getLoanRepayState());
+			nextLoan.setAmount(userLoan.getAmount());
+			nextLoan.setPassingTermDays(userLoan.getPassingTermDays());
+			nextLoan.setLoanIssueDate(userLoan.getIssueDate());
+			nextLoan.setLoanReturnState(userLoan.getLoanRepayState());
 			if(userLoan.isLoanExtended()){
 				List<ExtendedLoans> extLoans =
-						extendedLoanRepository.findAllUserExtendedLoans(userLoan.getId());
-				List<ExtendedLoansDTO> extLoansListDto = new ArrayList<>();
-				for(ExtendedLoans extLoan : extLoans){
-					ExtendedLoansDTO extendedLoansDTO = new ExtendedLoansDTO();
+						extendedLoanRepository.findExtendedLoansByLoanId(userLoan.getId());
+				List<ExtendedLoans> extLoansList = new ArrayList<>();
 
-					extendedLoansDTO.setExtendedAmount(extLoan.getExtendedAmount());
-					extendedLoansDTO.setExtendTermWeeks(extLoan.getExtendTermWeeks());
-					extendedLoansDTO.setExtendTermDate(extLoan.getExtendPassingTermDate());
-					extLoansListDto.add(extendedLoansDTO);
+				for(ExtendedLoans extLoan : extLoans){
+					ExtendedLoans extendedLoans = new ExtendedLoans();
+
+					extendedLoans.setExtendedAmount(extLoan.getExtendedAmount());
+					extendedLoans.setExtendTermWeeks(extLoan.getExtendTermWeeks());
+					extendedLoans.setExtendPassingTermDate(extLoan.getExtendPassingTermDate());
+					extLoansList.add(extendedLoans);
 				}
-				nextLoanDto.setExtendedLoans(extLoansListDto);
+				nextLoan.setExtendedLoans(extLoansList);
 			}
-			userLoansDTO.add(nextLoanDto);
+			userLoansDTO.add(nextLoan);
 		}
 		return ViewLoansResponse.successResponse(userLoansDTO);
 	}

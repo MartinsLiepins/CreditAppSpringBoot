@@ -27,7 +27,8 @@ public class LoginService {
 			return Response.failResponse(validationError);
 		}
 
-		LoginUser loginUser = new LoginUser(customerRepository.getIdByPasswordAndEmail(email,password));
+		LoginUser loginUser = new LoginUser(customerRepository.findCustomerByEmailAndPassword(
+						email,password).get().getId());
 
 		return Response.successResponse(null);
 	}

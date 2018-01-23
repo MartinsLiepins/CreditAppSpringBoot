@@ -4,16 +4,12 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * Created by marko on 2017.12.08..
- */
-
 @Entity
 @Table(name = "loan")
 public class Loan {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "loan_issue_id")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(nullable = false, name = "customer_id")
@@ -25,13 +21,13 @@ public class Loan {
 	@Column(nullable = false, length = 5, name = "passing_term_days")
 	private int passingTermDays;
 
-	@Column(name = "loan_extended_state")
+	@Column(nullable = false, name = "loan_extended_state")
 	private boolean loanExtended;
 
 	@Column(nullable = false, length = 80, name = "loan_issue_date")
 	private String issueDate;
 
-	@Column(name = "loan_repay_state")
+	@Column(nullable = false, name = "loan_repay_state")
 	private boolean loanRepayState;
 
 	public Loan(){}

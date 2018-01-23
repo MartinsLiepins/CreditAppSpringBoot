@@ -1,7 +1,7 @@
 package lv.mlproject17.CreditApp.api;
 
 /**
- * Created by marko on 2017.12.22..
+ * Created by martins.
  */
 public class Error {
 	private String field;

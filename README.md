@@ -7,7 +7,7 @@ path: localhost:8080/h2-console
  username=martins
  password=student
 
-To test application use such commands:
+To test application use:
 
 1. register new User (POST message):
     /quickloan/register
@@ -34,3 +34,5 @@ To test application use such commands:
 6. repay loan (POST message):
     /quickloan/App/repayLoan
     repayAmount - applicationAmount to repay with interest factor
+
+

@@ -40,7 +40,7 @@ public class RegisterCustomerValidator{
 	}
 
 	private boolean alreadyExist(String email) {
-		return customerRepository.findNameByLoginEmail(email).isPresent();
+		return customerRepository.findEmailByEmail(email).isPresent();
 	}
 
 	private Optional<Error> validatePassword(String password){

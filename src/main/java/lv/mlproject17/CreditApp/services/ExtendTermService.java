@@ -7,7 +7,6 @@ import lv.mlproject17.CreditApp.database.model.ExtendedLoans;
 import lv.mlproject17.CreditApp.database.model.Loan;
 import lv.mlproject17.CreditApp.database.repository.ExtendedLoanRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
-import lv.mlproject17.CreditApp.dto.LoanDTO;
 import lv.mlproject17.CreditApp.services.validators.ExtendTermValidator;
 import lv.mlproject17.CreditApp.services.validators.ServiceErrorMessageBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class ExtendTermService {
 	@Autowired
 	private LoanRepository loanRepository;
 	@Autowired
-	ExtendedLoanRepository extendedLoanRepository;
+	private ExtendedLoanRepository extendedLoanRepository;
 	@Autowired
 	private ExtendTermValidator validator;
 	@Autowired
@@ -38,40 +37,25 @@ public class ExtendTermService {
 			return Response.failResponse(validationError);
 		}
 
-		Long id = loanRepository.getLastLoanIdByCustomerId(LoginUser.logInId());
-		LoanDTO loanDto = buildLoanDto(loanRepository.getLoanByLoanId(id));
+		Loan loan = loanRepository.findFirstByCustomerIdOrderByIdDesc(LoginUser.logInId()).get();
 
-		if(loanDto.isLoanExtended()){
-			return Response.failResponse
-					(serviceErrorMessageBuilder.buildMessage
-							("", "You cant extend this loan. Loan is returned"));
-		}
-		if(loanDto.isLoanExtended()){
-			loanDto.setAmount(extendedLoanRepository.
-					findExtendedLoanAmount(loanDto.getId()));
-			extendedLoanRepository.save(buildExtendedLoan(loanDto, extendTermWeeks));
-			return Response.successResponse(null);
-		}else{
-			extendedLoanRepository.save(buildExtendedLoan(loanDto, extendTermWeeks));
-			loanRepository.updateLoanExtendedState(true, loanDto.getId());
+		if(loan.isLoanExtended()){
+			BigDecimal extendedAmount = extendedLoanRepository.
+					findFirstByLoanIdOrderByIdDesc(loan.getId()).getExtendedAmount();
+			extendedLoanRepository.save(extendedLoanCreator(loan.getId(), extendedAmount, extendTermWeeks));
 			return Response.successResponse(null);
 		}
+		extendedLoanRepository.save(extendedLoanCreator(loan.getId(), loan.getAmount(), extendTermWeeks));
+		loanRepository.updateLoanExtendedState(true, loan.getId());
+		return Response.successResponse(null);
+
 	}
 
-	private LoanDTO buildLoanDto(Loan loan){
-		LoanDTO dto = new LoanDTO();
-		dto.setLoanExtended(loan.isLoanExtended());
-		dto.setAmount(loan.getAmount());
-		dto.setId(loan.getId());
-		dto.setLoanReturnState(loan.getLoanRepayState());
-		return dto;
-	}
-
-	private ExtendedLoans buildExtendedLoan(LoanDTO dto, int extendTermWeeks){
+	private ExtendedLoans extendedLoanCreator(Long loanId, BigDecimal extendedAmount, int extendTermWeeks){
 		ExtendedLoans extLoan = new ExtendedLoans();
-		extLoan.setExtendedAmount(calcAmountWithPercentsPerWeek(dto.getAmount(), extendTermWeeks));
+		extLoan.setExtendedAmount(calcAmountWithPercentsPerWeek(extendedAmount, extendTermWeeks));
 		extLoan.setExtendTermWeeks(extendTermWeeks);
-		extLoan.setLoanId(dto.getId());
+		extLoan.setLoanId(loanId);
 		extLoan.setExtendPassingTermDate(LocalDateTime.now());
 		return extLoan;
 	}
@@ -80,8 +64,4 @@ public class ExtendTermService {
 		return amount.add(new BigDecimal(extendTermWeeks).
 				multiply(amount.multiply(EXTEND_LOAN_INTEREST_FACTOR_PER_WEEK)));
 	}
-
-
-
-
 }

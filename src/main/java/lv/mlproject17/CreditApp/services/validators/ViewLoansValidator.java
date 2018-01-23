@@ -30,6 +30,6 @@ public class ViewLoansValidator {
 	}
 
 	private boolean notExist(Long loginId){
-		return (!loanRepository.findLoansByCustomerId(loginId).isPresent());
+		return (!loanRepository.findLoanByCustomerId(loginId).isPresent());
 	}
 }

@@ -17,34 +17,42 @@ public class RepayLoanValidator {
 	LoanRepository loanRepository;
 
 
-	public List<Error> validate(BigDecimal returnAmount, Long customerId){
+	public List<Error> validate(BigDecimal repayAmount, Long customerId){
 		List<Error> errors = new ArrayList<>();
-		validateAmount(returnAmount).ifPresent(e -> errors.add(e));
-		validateIfExistLoan(customerId).ifPresent(e -> errors.add(e));
+		validateAmount(repayAmount).ifPresent(e -> errors.add(e));
+		validateIfLoanExistOrIsRepaid(customerId).ifPresent(e -> errors.add(e));
 		return errors;
 	}
 
-	private Optional<Error> validateIfExistLoan(Long customerId){
+	private Optional<Error> validateAmount(BigDecimal repayAmount){
+		if (repayAmount == null || repayAmount.equals("")) {
+			return Optional.of(new Error("Loan Amount", "May not be empty"));
+		}else if (repayAmount.equals(BigDecimal.ZERO)) {
+			return Optional.of(new Error("Loan Amount", "May not be zero value"));
+		}else if (repayAmount.compareTo(BigDecimal.ZERO)<0) {
+			return Optional.of(new Error("Loan Amount", "May not be negative"));
+		}else{
+			return Optional.empty();
+		}
+	}
+
+	private Optional<Error> validateIfLoanExistOrIsRepaid(Long customerId){
 		if(notExist(customerId)){
-			return Optional.of(new Error("Return loan", "You have not loans to return"));
+			return Optional.of(new Error("Repay loan", "You have not loans"));
+		}else if(isRepaid(customerId)){
+			return Optional.of(new Error("Repay loan", "All loans are repaid"));
 		}else{
 			return Optional.empty();
 		}
 	}
 
-	private boolean notExist(Long loginId){
-		return (!loanRepository.findLoansByCustomerId(loginId).isPresent());
+	private boolean notExist(Long customerId){
+		return (!loanRepository.findFirstByCustomerIdOrderByIdDesc(customerId).
+				isPresent());
 	}
 
-	private Optional<Error> validateAmount(BigDecimal loanAmount){
-		if (loanAmount == null || loanAmount.equals("")) {
-			return Optional.of(new Error("Loan Amount", "Must be not empty"));
-		}else if (loanAmount.equals(BigDecimal.ZERO)) {
-			return Optional.of(new Error("Loan Amount", "Must not by zero value"));
-		}else if (loanAmount.compareTo(BigDecimal.ZERO)<0) {
-			return Optional.of(new Error("Loan Amount", "Must not by negative"));
-		}else{
-			return Optional.empty();
-		}
+	private boolean isRepaid(Long customerId){
+		return (loanRepository.findFirstByCustomerIdOrderByIdDesc(customerId).
+				get().getLoanRepayState());
 	}
 }

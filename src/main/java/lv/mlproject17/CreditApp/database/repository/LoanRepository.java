@@ -18,14 +18,13 @@ import java.util.Optional;
 @Repository
 public interface LoanRepository extends CrudRepository<Loan, Long> {
 
-	Loan save(Loan newLoan);
+	Loan save(Loan loan);
 
-	@Modifying
-	@Transactional
-	@Query("UPDATE Loan x SET x.loanExtended = :status" +
-			" WHERE x.id = :id")
-	int updateLoanExtendedState(@Param("status") boolean status,
-	                            @Param("id") Long id);
+//	@Query("SELECT l FROM Loan l WHERE l.customerId = :id")
+	Optional<List<Loan>> findLoanByCustomerId(Long customerId);
+
+//	Optional<Loan> findFirstByCustomerIdOrderByIdDesc(@Param("id") Long customerId);
+	Optional<Loan> findFirstByCustomerIdOrderByIdDesc(Long customerId);
 
 	@Modifying
 	@Transactional
@@ -34,18 +33,10 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
 	int updateLoanRepayState(@Param("status") boolean status,
 	                         @Param("id") Long id);
 
-	@Query("SELECT MAX(id) FROM Loan l WHERE l.customerId = :id")
-	Long getLastLoanIdByCustomerId(@Param("id") Long customerId);
-
-	@Query("SELECT l FROM Loan l WHERE l.id = :id")
-	Loan getLoanByLoanId(@Param("id") Long loanId);
-
-	@Query("SELECT l FROM Loan l WHERE l.customerId = :id")
-	List<Loan> getLoansByCustomerId(@Param("id") Long customerId);
-
-	@Query("SELECT l FROM Loan l WHERE l.customerId = :id")
-	Optional<List<Loan>> findLoansByCustomerId(@Param("id") Long customerId);
-
-	@Query("SELECT loanRepayState FROM Loan l WHERE l.id = :id")
-	boolean getLoansRepayStateByLoanId(@Param("id") Long id);
+	@Modifying
+	@Transactional
+	@Query("UPDATE Loan x SET x.loanExtended = :status" +
+			" WHERE x.id = :id")
+	int updateLoanExtendedState(@Param("status") boolean status,
+	                            @Param("id") Long id);
 }

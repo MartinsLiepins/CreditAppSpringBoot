@@ -14,7 +14,7 @@ public class ExtendedLoans {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "extended_id")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "loan_id")

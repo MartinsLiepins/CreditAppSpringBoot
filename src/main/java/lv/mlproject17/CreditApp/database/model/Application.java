@@ -1,16 +1,19 @@
 package lv.mlproject17.CreditApp.database.model;
 
+import lv.mlproject17.CreditApp.threads.ApplicationStatus;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "loan_application")
-public class LoanApplication {
+public class Application {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "application_id")
-	private Long applicationId;
+	@Column(name = "id")
+	private Long id;
+
 
 	@Column(nullable = false, name = "customer_id")
 	private Long customerId;
@@ -27,14 +30,17 @@ public class LoanApplication {
 	@Column(name = "application_status")
 	private String applicationStatus;
 
+	@Column(name = "interest_factor")
+	private BigDecimal interestFactorDay;
+
 	@Column(nullable = false, length = 80, name = "application_date")
 	private String applicationDate;
 
-	public LoanApplication(){
+	public Application(){
 	}
 
-	public Long getApplicationId(){
-		return applicationId;
+	public Long getId(){
+		return id;
 	}
 	public Long getCustomerId(){
 		return customerId;
@@ -48,15 +54,18 @@ public class LoanApplication {
 	public int getPassingTermDays(){
 		return passingTermDays;
 	}
-	public String getApplicationStatus(){
-		return applicationStatus;
+	public ApplicationStatus getApplicationStatus(){
+		return ApplicationStatus.valueOf(applicationStatus);
+	}
+	public BigDecimal getInterestFactorDay(){
+		return interestFactorDay;
 	}
 	public LocalDateTime getApplicationDate(){
 		return LocalDateTime.parse(applicationDate);
 	}
 
-	public void setApplicationId(Long applicationId){
-		this.applicationId = applicationId;
+	public void setId(Long id){
+		this.id = id;
 	}
 	public void setCustomerId(Long customerId){
 		this.customerId = customerId;
@@ -70,8 +79,11 @@ public class LoanApplication {
 	public void setPassingTermDays(int passingTermDays){
 		this.passingTermDays = passingTermDays;
 	}
-	public void setApplicationStatus(String applicationStatus){
-		this.applicationStatus = applicationStatus;
+	public void setApplicationStatus(ApplicationStatus applicationStatus){
+		this.applicationStatus = applicationStatus.toString();
+	}
+	public void setInterestFactorDay(BigDecimal interestFactorDay){
+		this.interestFactorDay = interestFactorDay;
 	}
 	public void setApplicationDate(LocalDateTime applicationDate){
 		this.applicationDate = applicationDate.toString();

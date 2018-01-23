@@ -45,7 +45,7 @@ public class ApiController {
 	@ResponseBody
 	Response repayLoan
 			(@RequestParam(value = "repayAmount") BigDecimal repayAmount){
-		return repayLoanService.returnLoan(repayAmount);
+		return repayLoanService.repayLoan(repayAmount);
 	}
 }
 

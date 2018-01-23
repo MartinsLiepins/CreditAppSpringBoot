@@ -3,18 +3,18 @@ package lv.mlproject17.CreditApp.services;
 import lv.mlproject17.CreditApp.api.Error;
 import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.authentication.LoginUser;
+import lv.mlproject17.CreditApp.database.model.Application;
 import lv.mlproject17.CreditApp.database.model.Loan;
-import lv.mlproject17.CreditApp.database.model.LoanApplication;
-import lv.mlproject17.CreditApp.database.repository.LoanApplicationRepository;
+import lv.mlproject17.CreditApp.database.repository.ApplicationRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
-import lv.mlproject17.CreditApp.dto.LoanApplicationDTO;
 import lv.mlproject17.CreditApp.services.validators.ServiceErrorMessageBuilder;
 import lv.mlproject17.CreditApp.services.validators.ServiceWarningMessageBuilder;
 import lv.mlproject17.CreditApp.services.validators.TakeLoanValidator;
-import lv.mlproject17.CreditApp.threads.LoanApplicationState;
+import lv.mlproject17.CreditApp.threads.ApplicationStatus;
 import lv.mlproject17.CreditApp.threads.RiskAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,14 +22,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-import static lv.mlproject17.CreditApp.threads.LoanApplicationState.APPROVED_WITH_CONDITIONS;
-import static lv.mlproject17.CreditApp.threads.LoanApplicationState.IN_PROCESSING;
+import static lv.mlproject17.CreditApp.database.model.builders.ApplicationBuilder.createApplication;
+import static lv.mlproject17.CreditApp.database.model.builders.LoanBuilder.createLoan;
+import static lv.mlproject17.CreditApp.threads.ApplicationStatus.APPROVED_WITH_CONDITIONS;
+import static lv.mlproject17.CreditApp.threads.ApplicationStatus.IN_PROCESSING;
 
 @Service
 public class TakeLoanService {
 
 	@Autowired
-	private LoanApplicationRepository loanApplicationRepository;
+	private ApplicationRepository applicationRepository;
 	@Autowired
 	private LoanRepository loanRepository;
 	@Autowired
@@ -39,119 +41,109 @@ public class TakeLoanService {
 	@Autowired
 	private ServiceErrorMessageBuilder serviceErrorMessageBuilder;
 	@Autowired
-	ServiceWarningMessageBuilder serviceWarningMessageBuilder;
+	private ServiceWarningMessageBuilder serviceWarningMessageBuilder;
 
 
 	public Response takeLoan(BigDecimal applicationAmount, int applicationPassingTerm){
 
-		List<Error> validationError = validator.validate(applicationAmount, applicationPassingTerm);
+		List<Error> validationError = validator.validate(
+				applicationAmount, applicationPassingTerm);
 
 		if(!validationError.isEmpty()){
 			return Response.failResponse(validationError);
 		}
 
-		Optional<LoanApplication> lastApplicationOpt =
-				loanApplicationRepository.getLastApplicationByCustomerId(LoginUser.logInId());
+		Optional<Response> responseOpt = checkIfApplicationIsInProcessing(
+				applicationAmount, applicationPassingTerm);
+		if(responseOpt.isPresent()){
+		return responseOpt.get();
+		}
+//		checkIfApplicationIsInProcessing(
+//				applicationAmount, applicationPassingTerm).isPresent(r -> {return (r)
+//		} );
+		return newApplication(applicationAmount, applicationPassingTerm);
+	}
+
+	@Transactional
+	private Optional<Response> checkIfApplicationIsInProcessing(BigDecimal inputAmount, int inputTerm){
+		Optional<Application> lastApplicationOpt =
+				applicationRepository.findFirstByCustomerIdOrderByIdDesc(LoginUser.logInId());
 
 		if(lastApplicationOpt.isPresent()){
-			LoanApplication lastApplication = lastApplicationOpt.get();
-			LoanApplicationDTO lastApplicationDTO = loanApplicationDTOBuilder(lastApplication);
+			Application lastApplication = lastApplicationOpt.get();
 
-			if(lastApplicationDTO.getState() == IN_PROCESSING){
-				if(ChronoUnit.HOURS.between(lastApplicationDTO.getDate(), LocalDateTime.now()) < 12){
-					if((lastApplicationDTO.getApplicationAmount().compareTo(applicationAmount) == (1 | 0)) && (
-							lastApplicationDTO.getPassingTermDays() >= applicationPassingTerm)){
+			if(lastApplication.getApplicationStatus() == IN_PROCESSING){
+				if(ChronoUnit.HOURS.between(lastApplication.getApplicationDate(), LocalDateTime.now()) < 12){
+					if(((lastApplication.getApprovedAmount().compareTo(inputAmount)) != -1 ) && (
+							lastApplication.getPassingTermDays() >= inputTerm)){
 
-						lastApplicationDTO.setState(APPROVED_WITH_CONDITIONS);
-						updateLoanApplicationState(lastApplicationDTO);
-						loanRepository.save(loanBuilder(lastApplicationDTO));
-						return Response.successResponse(null);
+						lastApplication.setApplicationStatus(APPROVED_WITH_CONDITIONS);
+						applicationRepository.save(lastApplication);
+						loanRepository.save(loanCreator(lastApplication, inputAmount, inputTerm));
+
+						return Optional.of(Response.successResponse(null));
 					}
-					return Response.failResponse
+					return Optional.of(Response.failResponse
 							(serviceErrorMessageBuilder.buildMessage(
 									"", "Loan amount or passing term is incorrect." +
-											"Approved loan amount is " + lastApplicationDTO.getApprovedAmount() +
-											" EUR. Please enter correct values"));
+											"Approved loan amount is " + lastApplication.getApprovedAmount() +
+											" EUR. Please enter correct values")));
 				}
 			}
 		}
-
-		LoanApplication newApplication = loanApplicationBuilder(applicationAmount,
-					applicationPassingTerm, LoginUser.logInId(), IN_PROCESSING);
-
-			loanApplicationRepository.save(newApplication);
-
-			LoanApplicationDTO dtoReceive = analysis.loanApplicationAnalysis(
-					new LoanApplicationDTO(applicationAmount, applicationPassingTerm,
-							LocalDateTime.now(), LoginUser.logInId()));
-
-			updateLoanApplicationState(dtoReceive);
-
-			switch(dtoReceive.getState()){
-				case REJECTED:
-					return Response.failResponse
-							(serviceErrorMessageBuilder.buildMessage(
-									"", "Loan application rejected"));
-
-				case APPROVED:
-					loanRepository.save(loanBuilder(dtoReceive));
-					return Response.successResponse(null);
-
-				case IN_PROCESSING:
-					return Response.successResponse
-							(serviceWarningMessageBuilder.buildMessage(
-									"Approved loan amount is " + dtoReceive.getApplicationAmount() +
-											" EUR. If you will take such amount, " +
-											"please enter amount and passing term again"));
-
-				default:
-					return Response.failResponse
-							(serviceErrorMessageBuilder.buildMessage("", "System error"));
-			}
+		return Optional.empty();
 	}
 
-	private LoanApplicationDTO loanApplicationDTOBuilder(LoanApplication loanApplication){
-		LoanApplicationDTO dto = new LoanApplicationDTO();
-		dto.setState(LoanApplicationState.valueOf(
-				loanApplication.getApplicationStatus()));
-		dto.setDate(loanApplication.getApplicationDate());
-		return dto;
+
+	@Transactional
+	private Response newApplication(BigDecimal inputAmount, int inputTerm){
+		Application application =
+				analysis.applicationAnalysis(applicationCreator(inputAmount, inputTerm));
+		applicationRepository.save(application);
+		switch(application.getApplicationStatus()){
+			case REJECTED:
+				return Response.failResponse
+						(serviceErrorMessageBuilder.buildMessage(
+								"", "Loan application rejected"));
+
+			case APPROVED:
+				loanRepository.save(loanCreator(application, inputAmount, inputTerm));
+				return Response.successResponse(null);
+
+			case IN_PROCESSING:
+				return Response.successResponse
+						(serviceWarningMessageBuilder.buildMessage(
+								"Approved loan amount is " + application.getApprovedAmount() +
+										" EUR. If you will take such amount, " +
+										"please enter amount and passing term again"));
+
+			default:
+				return Response.failResponse
+						(serviceErrorMessageBuilder.buildMessage("", "System error"));
+		}
 	}
 
-	private Loan loanBuilder(LoanApplicationDTO dtoReceive){
-		Loan loan = new Loan();
 
-		loan.setCustomerId(dtoReceive.getCustomerId());
-		loan.setAmount(dtoReceive.getApprovedAmount());
-		loan.setIssueDate(LocalDateTime.now());
-		loan.setLoanExtended(false);
-		loan.setLoanRepayState(false);
-		loan.setPassingTermDays(dtoReceive.getPassingTermDays());
-		return loan;
+	private Loan loanCreator(Application lastApplication, BigDecimal inputAmount, int inputTerm){
+
+		return 	createLoan()
+				.withCustomerId(lastApplication.getCustomerId())
+				.withAmount(inputAmount)
+				.withPassingTermDays(inputTerm)
+				.withExtendState(false)
+				.withDate(LocalDateTime.now())
+				.withRepayState(false)
+				.build();
 	}
 
-	private LoanApplication loanApplicationBuilder(BigDecimal applicationAmount,
-	                                               int passingTerm, Long customerId,
-	                                               LoanApplicationState state){
-		LoanApplication application = new LoanApplication();
-		application.setApplicationAmount(applicationAmount);
-		application.setApprovedAmount(new BigDecimal(0));
-		application.setPassingTermDays(passingTerm);
-		application.setApplicationDate(LocalDateTime.now());
-		application.setCustomerId(customerId);
-		application.setApplicationStatus(state.toString());
-		return application;
-	}
+	private Application applicationCreator(BigDecimal inputAmount, int inputTerm){
 
-	 private void updateLoanApplicationState(LoanApplicationDTO dto){
-
-
-		loanApplicationRepository.updateApplicationState
-				((dto.getState()).toString(), dto.getLoanApplicationId());
-
-
-
-//		loanApplicationRepository.updateApplicationState
-//				((loanApplicationBuilder(dto));
+		return createApplication()
+				.withCustomerId(LoginUser.logInId())
+				.withApplicationAmount(inputAmount)
+				.withPassingTermDays(inputTerm)
+				.withApplicationStatus(ApplicationStatus.IN_PROCESSING)
+				.withDate(LocalDateTime.now())
+				.build();
 	}
 }
