@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-/**
- * Created by marko on 2017.12.10..
- */
 @Service
 public class LoginService {
 	@Autowired

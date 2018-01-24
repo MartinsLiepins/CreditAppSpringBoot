@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Created by marko on 2017.12.10..
- */
-
 @Service
 public class RegisterCustomerService {
 	@Autowired

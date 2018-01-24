@@ -1,38 +1,47 @@
 "# Java Back-End project"
 
-Use Postman or equivalent software to test application.
-
-In project H2 database is used:
-path: localhost:8080/h2-console
+In project H2 database is used,
+path on browser to check DB: localhost:8080/h2-console
  username=martins
  password=student
 
-To test application use:
+To test application use Postman or equivalent software:
 
 1. register new User (POST message):
-    /quickloan/register
+
+    localhost:8080/quickloan/register
+
+    POST body:
     email -> your email
     password -> your password
 
 2. login in application (POST message):
-    /quickloan/login
+    localhost:8080/quickloan/login
+
+    POST body:
     email -> your email
     password -> your password
 
 3. take loan (GET message):
-    /quickloan/App/loan
+    localhost:8080/quickloan/App/loan
+
+    GET parameters:
     loanAmount -> your loan applicationAmount
     passingTermDays -> your passing term in days
 
 4. extend loan (GET message):
-    /quickloan/App/extendLoan
+
+    GET parameters:
+    localhost:8080/quickloan/App/extendLoan
     extendTermWeeks -> your term in weeks to extend loan
 
 5.  view all user loans (GET message):
-    /quickloan/App/viewLoans
+    localhost:8080/quickloan/App/viewLoans
 
 6. repay loan (POST message):
-    /quickloan/App/repayLoan
-    repayAmount - applicationAmount to repay with interest factor
+    localhost:8080/quickloan/App/repayLoan
+
+    POST body:
+    repayAmount - applicationAmount to repay, including interest factor
 
 

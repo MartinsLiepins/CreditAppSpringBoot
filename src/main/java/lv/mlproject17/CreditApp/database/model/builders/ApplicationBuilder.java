@@ -23,23 +23,6 @@ public class ApplicationBuilder {
 		return new ApplicationBuilder();
 	}
 
-	public static Application createApplication(
-			Long applicationId, Long customerId, BigDecimal applicationAmount,
-			BigDecimal approvedAmount, int passingTermDays, ApplicationStatus status,
-			BigDecimal interestFactor, LocalDateTime date){
-
-		return createApplication()
-				.withApplicationId(applicationId)
-				.withCustomerId(customerId)
-				.withApplicationAmount(applicationAmount)
-				.withApprovedAmount(approvedAmount)
-				.withPassingTermDays(passingTermDays)
-				.withApplicationStatus(status)
-				.withInterestFactor(interestFactor)
-				.withDate(date)
-				.build();
-	}
-
 	public Application build(){
 		Application application = new Application();
 		application.setId(applicationId);
