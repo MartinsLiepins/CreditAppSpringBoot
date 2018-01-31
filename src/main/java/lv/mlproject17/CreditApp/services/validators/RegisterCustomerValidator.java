@@ -27,13 +27,13 @@ public class RegisterCustomerValidator{
 	private Optional<Error> validateLoginEmail(String email){
 		EmailValidator validator = new EmailValidator();
 		if(!validator.isValid(email, null)){
-			return Optional.of(new Error("login", "Incorrect e-mail"));
+			return Optional.of(new Error("email", "Incorrect e-mail"));
 		}
 		else if (email == null || email.equals("")){
-			return Optional.of(new Error("login", "E-mail must be not empty"));
+			return Optional.of(new Error("email", "E-mail must be not empty"));
 		}
 		else if (alreadyExist(email)) {
-			return Optional.of(new Error("login", "E-mail already exist"));
+			return Optional.of(new Error("email", "E-mail already exist"));
 		}else{
 			return Optional.empty();
 		}

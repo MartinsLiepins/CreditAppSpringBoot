@@ -31,9 +31,9 @@ loanAmount -> your loan applicationAmount
 passingTermDays -> your passing term in days
 
 4. extend loan (GET message):
+localhost:8080/quickloan/App/extendLoan
 
 GET parameters:
-localhost:8080/quickloan/App/extendLoan
 extendTermWeeks -> your term in weeks to extend loan
 
 5.  view all user loans (GET message):
@@ -43,7 +43,7 @@ localhost:8080/quickloan/App/viewLoans
 localhost:8080/quickloan/App/repayLoan
 
 POST body:
-repayAmount - applicationAmount to repay, including interest factor
+repayAmount - Amount to repay, including interest factor
 
 EOF
 

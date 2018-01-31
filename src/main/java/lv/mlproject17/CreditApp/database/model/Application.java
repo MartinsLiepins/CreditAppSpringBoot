@@ -14,7 +14,6 @@ public class Application {
 	@Column(name = "id")
 	private Long id;
 
-
 	@Column(nullable = false, name = "customer_id")
 	private Long customerId;
 

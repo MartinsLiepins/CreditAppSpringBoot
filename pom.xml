@@ -60,7 +60,7 @@
 		<!--<scope>runtime</scope>-->
 		<!--</dependency>-->
 
-		<!--uncomment if using H2 db-->
+		<!--uncomment if not using H2 db-->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

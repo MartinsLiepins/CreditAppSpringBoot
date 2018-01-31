@@ -28,7 +28,7 @@ public class RiskAnalysis {
 	private final BigDecimal LOAN_INTEREST_FACTOR_DAY = new BigDecimal(0.5/100);
 	private final int TIME_FROM = 0;
 	private final int TIME_TO = 6;
-	private final int  MAX_APPLICATION_FROM_IP_IN_DAY = 3;
+//	private final int  MAX_APPLICATION_FROM_IP_IN_DAY = 3;
 
 	public Application applicationAnalysis(Application applicationIn){
 
