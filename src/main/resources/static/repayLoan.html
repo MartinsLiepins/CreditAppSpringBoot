@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quickloan repay menu</title>
+    <link rel="stylesheet" href="index_style.css" type="text/css">
+</head>
+
+<body>
+
+
+
+<div class="spec">
+    <div class="grid-container">
+        <!-- ********************** -->
+        <div class="item1">
+            <!-- ********************** -->
+            <h1>Quick loan</h1>
+        </div>
+        <!-- ********************** -->
+        <div class="item2">
+            <!-- ********************** -->
+            <ul class="navi">
+                <li class="navi"><a  href="takeLoan.html">Take loan</a></li>
+                <li class="navi"><a  href="extendLoan.html">Extend loan</a></li>
+                <li class="navi"><a  href="viewLoans.html">View loans</a></li>
+                <li class="navi"><a  class="active" href="#home">Repay loan</a></li>
+            </ul>
+            <br>
+            repay amount: <input id="repay_amount" type="text" name="amount" value=""><br /><br />
+
+
+            <button onclick="loginJsonReq()">Submit</button>
+
+            <script>
+			function loginJsonReq() {
+			    var jsonData = convertToJson();
+				var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange=function(){
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("dyspalyText").innerHTML = getResponseMessage(this.response);
+                    }
+                };
+				xhttp.open("POST", "quickloan/App/repayLoan", true);
+				xhttp.setRequestHeader("Content-type", "application/json");
+				xhttp.send(jsonData);
+			}
+			</script>
+
+            <script>
+				function convertToJson(){
+				    var myObj = {};
+				    myObj["amount"] = document.getElementById("repay_amount").value;;
+				    return JSON.stringify(myObj);
+				}
+			</script>
+
+            <script>
+                function getResponseMessage(jsonResponse){
+                    var responseMessage, i = "";
+                    var obj = JSON.parse(jsonResponse);
+                    if(obj.status == "Done"){
+                        return responseMessage = "The loan is returned";
+                    }else if(obj.status == "Error"){
+                        for(i in obj.errors){
+                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>";
+                        }
+                        return responseMessage;
+					}
+                }
+            </script>
+
+
+
+        </div>
+
+        <!-- ********************** -->
+        <div class="item3">
+            <!-- ********************** -->
+            <p class="item3" id="dyspalyText"></p>
+        </div>
+
+        <!-- ********************** -->
+        <div class="item4">
+            <!-- ********************** -->
+        </div>
+
+        <!-- ********************** -->
+
+    </div>
+</div>
+
+</body>
+</html>

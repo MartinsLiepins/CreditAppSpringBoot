@@ -7,7 +7,7 @@ import lv.mlproject17.CreditApp.database.model.ExtendedLoans;
 import lv.mlproject17.CreditApp.database.model.Loan;
 import lv.mlproject17.CreditApp.database.repository.ExtendedLoanRepository;
 import lv.mlproject17.CreditApp.database.repository.LoanRepository;
-import lv.mlproject17.CreditApp.dto.ViewUserLoansDTO;
+import lv.mlproject17.CreditApp.dto.ViewUserLoansDto;
 import lv.mlproject17.CreditApp.services.validators.ViewLoansValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +33,10 @@ public class ViewLoansService {
 		}
 
 		List<Loan> userLoans = loanRepository.findLoanByCustomerId(LoginUser.logInId()).get();
-		List<ViewUserLoansDTO> userLoansDTO = new ArrayList<>();
+		List<ViewUserLoansDto> userLoansDTO = new ArrayList<>();
 
 		for(Loan userLoan : userLoans){
-			ViewUserLoansDTO nextLoan = new ViewUserLoansDTO();
+			ViewUserLoansDto nextLoan = new ViewUserLoansDto();
 
 			nextLoan.setAmount(userLoan.getAmount());
 			nextLoan.setPassingTermDays(userLoan.getPassingTermDays());

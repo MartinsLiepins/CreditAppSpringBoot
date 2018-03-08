@@ -18,7 +18,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
 	                                        @Param("password") String password);
 
 //	@Query("SELECT email FROM Customer c WHERE c.email = :loginEmail")
-	Optional<String> findEmailByEmail(@Param("loginEmail") String loginEmail);
+	Optional<Customer> getByEmail(@Param("email") String email);
 
 	Customer save(Customer newCustomer);
 }

@@ -35,7 +35,7 @@ public class ExtendTermValidator {
 
 	private Optional<Error> validateTerm(int termWeeks){
 		if (termWeeks == 0) {
-			return Optional.of(new Error("Extend term weeks", "Mst be not empty"));
+			return Optional.of(new Error("Extend term weeks", "Must be not empty"));
 		}else if (termWeeks < 0) {
 			return Optional.of(new Error("Extend term weeks", "Must not by negative"));
 		}else if (termWeeks > MAX_EXTEND_TERM_WEEKS) {

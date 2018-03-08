@@ -6,44 +6,14 @@ localhost:8080/h2-console
 username=martins
 password=student
 
-To test application use Postman or equivalent software:
+path on browser to application:
+login page: localhost:8080/index.html
 
-1. register new User (POST message):
-
-localhost:8080/quickloan/register
-
-POST body:
-email -> your email
-password -> your password
-
-2. login in application (POST message):
-localhost:8080/quickloan/login
-
-POST body:
-email -> your email
-password -> your password
-
-3. take loan (GET message):
-localhost:8080/quickloan/App/loan
-
-GET parameters:
-loanAmount -> your loan applicationAmount
-passingTermDays -> your passing term in days
-
-4. extend loan (GET message):
-localhost:8080/quickloan/App/extendLoan
-
-GET parameters:
-extendTermWeeks -> your term in weeks to extend loan
-
-5.  view all user loans (GET message):
-localhost:8080/quickloan/App/viewLoans
-
-6. repay loan (POST message):
-localhost:8080/quickloan/App/repayLoan
-
-POST body:
-repayAmount - Amount to repay, including interest factor
+To work with App use such steps:
+1. register
+2. log in
+3. take loan (max first loan amount is 400 eur, there are conditions depending in time when you take a loan)
+4. repay/extend/view loan(s)
 
 EOF
 

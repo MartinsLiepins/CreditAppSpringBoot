@@ -1,6 +1,6 @@
 package lv.mlproject17.CreditApp.api;
 
-import lv.mlproject17.CreditApp.dto.ViewUserLoansDTO;
+import lv.mlproject17.CreditApp.dto.ViewUserLoansDto;
 
 import java.util.List;
 
@@ -8,20 +8,20 @@ import java.util.List;
  * Created by marko on 2018.01.07..
  */
 public class ViewLoansResponse {
-	private boolean success;
+	private String status;
 	private List<Error> errors;
-	private List<ViewUserLoansDTO> viewLoansList;
+	private List<ViewUserLoansDto> viewLoansList;
 
 	public static ViewLoansResponse failResponse(List<Error> errors){
-		return new ViewLoansResponse(false, errors, null);
+		return new ViewLoansResponse("Error", errors, null);
 	}
 
-	public static ViewLoansResponse successResponse(List<ViewUserLoansDTO> viewLoansList){
-		return new ViewLoansResponse(true, null, viewLoansList);
+	public static ViewLoansResponse successResponse(List<ViewUserLoansDto> viewLoansList){
+		return new ViewLoansResponse("Done", null, viewLoansList);
 	}
 
-	public ViewLoansResponse(boolean success, List<Error> errors, List<ViewUserLoansDTO> viewList){
-		this.success = success;
+	public ViewLoansResponse(String status, List<Error> errors, List<ViewUserLoansDto> viewList){
+		this.status = status;
 		this.errors = errors;
 		this.viewLoansList = viewList;
 	}
@@ -29,14 +29,11 @@ public class ViewLoansResponse {
 	public List<Error> getErrors(){
 		return errors;
 	}
-	public List<ViewUserLoansDTO> getViewLoansList(){
+	public List<ViewUserLoansDto> getViewLoansList(){
 		return viewLoansList;
 	}
 
-	public boolean getSuccess(){
-		return success;
-	}
-	public boolean getFail(){
-		return !success;
+	public String getStatus(){
+		return status;
 	}
 }

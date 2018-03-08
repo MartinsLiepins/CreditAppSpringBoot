@@ -2,11 +2,13 @@ package lv.mlproject17.CreditApp.controller;
 
 import lv.mlproject17.CreditApp.api.Response;
 import lv.mlproject17.CreditApp.api.ViewLoansResponse;
-import lv.mlproject17.CreditApp.services.*;
+import lv.mlproject17.CreditApp.dto.LoanDto;
+import lv.mlproject17.CreditApp.services.ExtendTermService;
+import lv.mlproject17.CreditApp.services.RepayLoanService;
+import lv.mlproject17.CreditApp.services.TakeLoanService;
+import lv.mlproject17.CreditApp.services.ViewLoansService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/quickloan/App")
@@ -20,19 +22,17 @@ public class ApiController {
 	@Autowired
 	private RepayLoanService repayLoanService;
 
-	@GetMapping(path="/loan")
+	@PostMapping(path="/loan")
 	@ResponseBody
 	Response takeLoan(
-			@RequestParam(value = "loanAmount")BigDecimal loanAmount,
-			@RequestParam(value = "passingTermDays") int passingTermDays){
-		return takeLoanService.takeLoan(loanAmount, passingTermDays);
+			@RequestBody LoanDto loanDto){
+		return takeLoanService.takeLoan(loanDto.getAmount(), loanDto.getTerm());
 	}
 
-	@GetMapping(path="/extendLoan")
+	@PostMapping(path="/extendLoan")
 	@ResponseBody
-	Response extendLoan(
-			@RequestParam(value = "extendTermWeeks") int extendTermWeeks){
-		return extendTermService.extendLastUserLoan(extendTermWeeks);
+	Response extendLoan(@RequestBody LoanDto loanDto){
+		return extendTermService.extendLastUserLoan(loanDto.getTerm());
 	}
 
 	@RequestMapping(path="/viewLoans")
@@ -43,9 +43,8 @@ public class ApiController {
 
 	@PostMapping(path="/repayLoan")
 	@ResponseBody
-	Response repayLoan
-			(@RequestParam(value = "repayAmount") BigDecimal repayAmount){
-		return repayLoanService.repayLoan(repayAmount);
+	Response repayLoan(@RequestBody LoanDto loanDto){
+		return repayLoanService.repayLoan(loanDto.getAmount());
 	}
 }
 

@@ -24,30 +24,30 @@ public class RegisterCustomerValidator{
 		return errors;
 	}
 
-	private Optional<Error> validateLoginEmail(String email){
+	public Optional<Error> validateLoginEmail(String email){
 		EmailValidator validator = new EmailValidator();
 		if(!validator.isValid(email, null)){
-			return Optional.of(new Error("email", "Incorrect e-mail"));
+			return Optional.of(new Error("loginEmail", "Incorrect e-mail"));
 		}
 		else if (email == null || email.equals("")){
-			return Optional.of(new Error("email", "E-mail must be not empty"));
+			return Optional.of(new Error("loginEmail", "E-mail must not be empty"));
 		}
 		else if (alreadyExist(email)) {
-			return Optional.of(new Error("email", "E-mail already exist"));
+			return Optional.of(new Error("loginEmail", "E-mail already exist"));
 		}else{
 			return Optional.empty();
 		}
 	}
 
 	private boolean alreadyExist(String email) {
-		return customerRepository.findEmailByEmail(email).isPresent();
+		return customerRepository.getByEmail(email).isPresent();
 	}
 
-	private Optional<Error> validatePassword(String password){
+	public Optional<Error> validatePassword(String password){
 		if (password == null || password.equals("")){
-			return Optional.of(new Error("password", "Password must be not empty"));
+			return Optional.of(new Error("password", "Password must not be empty"));
 		}else if (password.length() < 4){
-			return Optional.of(new Error("password", "Password must be not shorter than 4 symbols"));
+			return Optional.of(new Error("password", "Password must not be shorter than 4 symbols"));
 		}else{
 			return Optional.empty();
 		}

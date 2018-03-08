@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quickloan view loans</title>
+    <link rel="stylesheet" href="index_style.css" type="text/css">
+</head>
+
+<body>
+
+
+
+<div class="spec">
+    <div class="grid-container">
+        <!-- ********************** -->
+        <div class="item1">
+            <!-- ********************** -->
+            <h1>Quick loan</h1>
+        </div>
+        <!-- ********************** -->
+        <div class="item2">
+            <!-- ********************** -->
+            <ul class="navi">
+                <li class="navi"><a  href="takeLoan.html">Take loan</a></li>
+                <li class="navi"><a  href="extendLoan.html">Extend loan</a></li>
+                <li class="navi"><a  class="active" href="#home">View loans</a></li>
+                <li class="navi"><a  href="repayLoan.html">Repay loan</a></li>
+            </ul>
+            <br>
+
+            <button onclick="loginJsonReq()">view loans</button>
+
+            <script>
+			function loginJsonReq() {
+				var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange=function(){
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("displayText").innerHTML = getResponseMessage(this.response);
+                    }
+                };
+				xhttp.open("GET", "quickloan/App/viewLoans", true);
+				xhttp.setRequestHeader("Content-type", "application/json");
+				xhttp.send();
+			}
+			</script>
+
+            <script>
+                function getResponseMessage(jsonResponse){
+                    var responseMessage, i = "";
+                    var obj = JSON.parse(jsonResponse);
+                    if(obj.status == "Done"){
+                        responseMessage = "You have such loans: " + "<br>";
+                        for(i in obj.viewLoansList){
+                            responseMessage += i + "." +
+                            " amount: " + obj.viewLoansList[i].amount + " EUR/" +
+                            " term: " + obj.viewLoansList[i].passingTermDays + " days/" +
+                            " date: " + obj.viewLoansList[0].loanIssueDate.year + ".";
+
+                                        <!--obj.viewLoansList[i].loanIssueDate.monthValue + "." +-->
+                                        <!--obj.viewLoansList[i].loanIssueDate.dayOfMonth + "."; -->
+                            <!--" loan returned: " obj.viewLoansList[i].loanReturnState + "/" +-->
+                            <!--" loan extended: " obj.viewLoansList[i].extendedLoans + "/" +-->
+
+                        }
+                        return responseMessage;
+                    }else{
+                        for(i in obj.errors){
+                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>";
+                        }
+                        return responseMessage;
+                    }
+                }
+            </script>
+
+        </div>
+
+        <!-- ********************** -->
+        <div class="item3">
+            <!-- ********************** -->
+            <p class="item3" id="displayText"></p>
+        </div>
+
+        <!-- ********************** -->
+        <div class="item4">
+            <!-- ********************** -->
+        </div>
+
+        <!-- ********************** -->
+
+    </div>
+</div>
+
+</body>
+</html>

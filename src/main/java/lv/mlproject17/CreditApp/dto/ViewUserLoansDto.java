@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by marko on 2017.12.20..
  */
-public class ViewUserLoansDTO {
+public class ViewUserLoansDto {
 
 
 	private String name;
@@ -19,7 +19,7 @@ public class ViewUserLoansDTO {
 	private boolean loanReturnState;
 	private List<ExtendedLoans> extendedLoans;
 
-	public ViewUserLoansDTO(){}
+	public ViewUserLoansDto(){}
 
 	public void setName(String name){
 		this.name = name;

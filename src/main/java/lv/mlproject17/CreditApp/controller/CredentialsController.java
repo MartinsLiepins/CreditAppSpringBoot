@@ -1,7 +1,9 @@
 package lv.mlproject17.CreditApp.controller;
 
 import lv.mlproject17.CreditApp.api.Response;
-import lv.mlproject17.CreditApp.services.*;
+import lv.mlproject17.CreditApp.dto.CredentialsDto;
+import lv.mlproject17.CreditApp.services.LoginService;
+import lv.mlproject17.CreditApp.services.RegisterCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,24 +12,21 @@ import org.springframework.web.bind.annotation.*;
 public class CredentialsController {
 	@Autowired
 	private RegisterCustomerService registerCustomerService;
-
 	@Autowired
 	private LoginService loginService;
 
 	@PostMapping(path="/register")
-	@ResponseBody
 	public Response registerNewCustomer(
-			@RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password){
-		return registerCustomerService.registerUser(email, password);
+			@RequestBody CredentialsDto credentialsDto){
+		return registerCustomerService.registerUser(
+				credentialsDto.getEmail(), credentialsDto.getPassword());
 	}
 
 	@PostMapping(path="/login")
 	@ResponseBody
-	Response logIn(
-			@RequestParam(value = "email") String email,
-			@RequestParam(value = "password") String password){
-		return loginService.logIn(email, password);
+	public Response logIn(
+			@RequestBody CredentialsDto credentialsDto){
+		return loginService.logIn(credentialsDto.getEmail(), credentialsDto.getPassword());
 	}
 }
 

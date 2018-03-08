@@ -58,9 +58,6 @@ public class TakeLoanService {
 		if(responseOpt.isPresent()){
 		return responseOpt.get();
 		}
-//		checkIfApplicationIsInProcessing(
-//				applicationAmount, applicationPassingTerm).isPresent(r -> {return (r)
-//		} );
 		return newApplication(applicationAmount, applicationPassingTerm);
 	}
 
@@ -86,7 +83,7 @@ public class TakeLoanService {
 					return Optional.of(Response.failResponse
 							(serviceErrorMessageBuilder.buildMessage(
 									"", "Loan amount or passing term is incorrect." +
-											"Approved loan amount is " + lastApplication.getApprovedAmount() +
+											" Approved loan amount is " + lastApplication.getApprovedAmount() +
 											" EUR. Please enter correct values")));
 				}
 			}

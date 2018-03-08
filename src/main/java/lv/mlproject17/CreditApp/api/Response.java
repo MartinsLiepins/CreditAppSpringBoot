@@ -1,6 +1,6 @@
 package lv.mlproject17.CreditApp.api;
 
-import lv.mlproject17.CreditApp.dto.ViewUserLoansDTO;
+import lv.mlproject17.CreditApp.dto.ViewUserLoansDto;
 
 import java.util.List;
 
@@ -9,26 +9,30 @@ import java.util.List;
  */
 public class Response {
 
-	private boolean success;
+	private String status;
 	private List<Error> errors;
 	private List<Warning> warnings;
 
 	public static Response successResponse(List<Warning> warnings){
-		return new Response(true, null, warnings);
+		if(warnings == null){
+			return new Response("Done", null, null);
+		}else{
+			return new Response("Warning", null, warnings);
+		}
 	}
 
 	public static Response failResponse(List<Error> errors){
-		return new Response(false, errors, null);
+		return new Response("Error", errors, null);
 	}
 
-	public Response(boolean success, List<Error> errors, List<Warning> warnings){
-		this.success = success;
+	public Response(String status, List<Error> errors, List<Warning> warnings){
+		this.status = status;
 		this.errors = errors;
 		this.warnings = warnings;
 	}
 
-	public Response(boolean success, List<ViewUserLoansDTO> viewList){
-		this.success = success;
+	public Response(String status, List<ViewUserLoansDto> viewList){
+		this.status = status;
 	}
 
 	public List<Error> getErrors(){
@@ -38,10 +42,7 @@ public class Response {
 		return warnings;
 	}
 
-	public boolean getSuccess(){
-		return success;
-	}
-	public boolean getFail(){
-		return !success;
+	public String getStatus(){
+		return status;
 	}
 }

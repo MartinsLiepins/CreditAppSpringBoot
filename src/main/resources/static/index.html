@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quickloan login</title>
+    <link rel="stylesheet" href="index_style.css" type="text/css">
+</head>
+
+
+<body>
+
+<div class="spec">
+    <div class="grid-container">
+        <!-- ********************** -->
+        <div class="item1">
+            <!-- ********************** -->
+            <h1>Quick loan</h1>
+        </div>
+        <!-- ********************** -->
+        <div class="item2">
+            <!-- ********************** -->
+            <p class="left_align"><a href="/registerPage.html">Register</a></p>
+
+            e-mail: <input id="email" type="text" name="email" value=""><br /><br />
+            password: <input id="password" type="text" name="password" value=""><br /><br />
+
+            <button onclick="loginJsonReq()">Login</button>
+
+            <script>
+			function loginJsonReq() {
+			    var jsonData = convertToJson();
+				var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange=function(){
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("dyspalyText").innerHTML = getResponseMessage(this.response);
+                    }
+                };
+				xhttp.open("POST", "quickloan/login", true);
+				xhttp.setRequestHeader("Content-type", "application/json");
+				xhttp.send(jsonData);
+			}
+			</script>
+
+            <script>
+				function convertToJson(){
+				    var myObj = {};
+				    myObj["email"] = document.getElementById("email").value;;
+				    myObj["password"] = document.getElementById("password").value;
+				    return JSON.stringify(myObj);
+				}
+			</script>
+
+            <script>
+                function getResponseMessage(jsonResponse){
+                    var responseMessage, i = "";
+                    var obj = JSON.parse(jsonResponse);
+                    if(obj.status == "Done"){
+                        window.location.href = "menuPage.html";
+                        return responseMessage = "Welcome";
+                    }else{
+                        for(i in obj.errors){
+                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>"
+                        }
+                        return responseMessage;
+                    }
+                }
+            </script>
+        </div>
+        <!-- ********************** -->
+        <div>
+            <!-- ********************** -->
+            <p class="item3" id="dyspalyText"></p>
+
+        </div>
+        <!-- ********************** -->
+        <div class="item4">
+            <!-- ********************** -->
+        </div>
+        <!-- ********************** -->
+
+    </div>
+</div>
+
+</body>
+</html>
