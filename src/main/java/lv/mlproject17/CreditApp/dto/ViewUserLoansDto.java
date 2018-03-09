@@ -6,9 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Created by marko on 2017.12.20..
- */
 public class ViewUserLoansDto {
 
 
@@ -21,24 +18,6 @@ public class ViewUserLoansDto {
 
 	public ViewUserLoansDto(){}
 
-	public void setName(String name){
-		this.name = name;
-	}
-	public void setAmount(BigDecimal amount){
-		this.amount = amount;
-	}
-	public void setPassingTermDays(int passingTermDays){
-		this.passingTermDays = passingTermDays;
-	}
-	public void setLoanIssueDate(LocalDateTime loanIssueDate){
-		this.loanIssueDate = loanIssueDate;
-	}
-	public void setLoanReturnState(boolean loanReturnState){
-		this.loanReturnState = loanReturnState;
-	}
-	public void setExtendedLoans(List<ExtendedLoans> loanIsExtended){
-		this.extendedLoans = loanIsExtended;
-	}
 
 	public String getName(){
 		return name;
@@ -57,5 +36,24 @@ public class ViewUserLoansDto {
 	}
 	public List<ExtendedLoans> getExtendedLoans(){
 		return extendedLoans;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+	public void setAmount(BigDecimal amount){
+		this.amount = amount;
+	}
+	public void setPassingTermDays(int passingTermDays){
+		this.passingTermDays = passingTermDays;
+	}
+	public void setLoanIssueDate(LocalDateTime loanIssueDate){
+		this.loanIssueDate = loanIssueDate;
+	}
+	public void setLoanReturnState(boolean loanReturnState){
+		this.loanReturnState = loanReturnState;
+	}
+	public void setExtendedLoans(List<ExtendedLoans> loanIsExtended){
+		this.extendedLoans = loanIsExtended;
 	}
 }
