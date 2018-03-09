@@ -56,10 +56,11 @@
                     var obj = JSON.parse(jsonResponse);
                     if(obj.status == "Done"){
                         window.location.href = "menuPage.html";
-                        return responseMessage = "Welcome";
+                        return responseMessage = "Welcome to credit application";
                     }else{
+                        responseMessage = "Credentials error:" + "<br>";
                         for(i in obj.errors){
-                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>"
+                          responseMessage += "- " + obj.errors[i].field + " " + obj.errors[i].errorMessage + "<br>"
                         }
                         return responseMessage;
                     }
@@ -73,10 +74,7 @@
 
         </div>
         <!-- ********************** -->
-        <div class="item4">
-            <!-- ********************** -->
-        </div>
-        <!-- ********************** -->
+
 
     </div>
 </div>

@@ -23,7 +23,7 @@ public class ViewLoansValidator {
 
 	private Optional<Error> validateIfExistLoan(Long customerId){
 		if(notExist(customerId)){
-			return Optional.of(new Error("View loan", "You have not loans to view"));
+			return Optional.of(new Error("", "You have not loans to view"));
 		}else{
 			return Optional.empty();
 		}

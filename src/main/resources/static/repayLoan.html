@@ -25,6 +25,7 @@
                 <li class="navi"><a  href="extendLoan.html">Extend loan</a></li>
                 <li class="navi"><a  href="viewLoans.html">View loans</a></li>
                 <li class="navi"><a  class="active" href="#home">Repay loan</a></li>
+                <li class="navi" style="float:right"><a  href="index.html">Logout</a></li>
             </ul>
             <br>
             repay amount: <input id="repay_amount" type="text" name="amount" value=""><br /><br />
@@ -62,8 +63,9 @@
                     if(obj.status == "Done"){
                         return responseMessage = "The loan is returned";
                     }else if(obj.status == "Error"){
+                        responseMessage = " ";
                         for(i in obj.errors){
-                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>";
+                          responseMessage += "- " + obj.errors[i].field + " " + obj.errors[i].errorMessage + "<br>";
                         }
                         return responseMessage;
 					}
@@ -78,11 +80,6 @@
         <div class="item3">
             <!-- ********************** -->
             <p class="item3" id="dyspalyText"></p>
-        </div>
-
-        <!-- ********************** -->
-        <div class="item4">
-            <!-- ********************** -->
         </div>
 
         <!-- ********************** -->

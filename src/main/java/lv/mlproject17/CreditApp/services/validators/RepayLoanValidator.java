@@ -26,11 +26,11 @@ public class RepayLoanValidator {
 
 	private Optional<Error> validateAmount(BigDecimal repayAmount){
 		if (repayAmount == null || repayAmount.equals("")) {
-			return Optional.of(new Error("Loan Amount", "May not be empty"));
+			return Optional.of(new Error("Repay amount field", "must not be empty"));
 		}else if (repayAmount.equals(BigDecimal.ZERO)) {
-			return Optional.of(new Error("Loan Amount", "May not be zero value"));
+			return Optional.of(new Error("Repay amount field", "must not be zero value"));
 		}else if (repayAmount.compareTo(BigDecimal.ZERO)<0) {
-			return Optional.of(new Error("Loan Amount", "May not be negative"));
+			return Optional.of(new Error("Repay amount field", "must not be negative"));
 		}else{
 			return Optional.empty();
 		}
@@ -38,9 +38,9 @@ public class RepayLoanValidator {
 
 	private Optional<Error> validateIfLoanExistOrIsRepaid(Long customerId){
 		if(notExist(customerId)){
-			return Optional.of(new Error("Repay loan", "You have not loans"));
+			return Optional.of(new Error("", "You have not loans"));
 		}else if(isRepaid(customerId)){
-			return Optional.of(new Error("Repay loan", "All loans are repaid"));
+			return Optional.of(new Error("", "All loans are repaid"));
 		}else{
 			return Optional.empty();
 		}

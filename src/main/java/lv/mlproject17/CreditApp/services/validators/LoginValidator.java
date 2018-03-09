@@ -25,7 +25,7 @@ public class LoginValidator {
 
 	private Optional<Error> validateLogin(String name){
 		if (name == null || name.equals("")) {
-			return Optional.of(new Error("login", "Login must by not empty"));
+			return Optional.of(new Error("Login e-mail field", "must not be empty"));
 		}else{
 			return Optional.empty();
 		}
@@ -33,9 +33,9 @@ public class LoginValidator {
 
 	private Optional<Error> validatePassword(String password){
 		if (password == null || password.equals("")){
-			return Optional.of(new Error("password", "Password must by not empty"));
+			return Optional.of(new Error("Password field", "must not be empty"));
 		}else if (password.length() < 4){
-			return Optional.of(new Error("password", "Password must by not shorter than 4 symbols"));
+			return Optional.of(new Error("Password field", "must not be shorter than 4 symbols"));
 		}else{
 			return Optional.empty();
 		}
@@ -43,7 +43,7 @@ public class LoginValidator {
 
 	private Optional<Error> validateCustomer(String email, String password){
 		if(notExist(email, password)){
-			return Optional.of(new Error("name, password", "Incorrect name or password"));
+			return Optional.of(new Error("", "Incorrect name or password"));
 		}else{
 			return Optional.empty();
 		}

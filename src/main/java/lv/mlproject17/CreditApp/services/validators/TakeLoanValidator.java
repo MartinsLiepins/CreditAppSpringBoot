@@ -21,11 +21,11 @@ public class TakeLoanValidator {
 
 	private Optional<Error> validateAmount(BigDecimal loanAmount){
 		if (loanAmount == null || loanAmount.equals("")) {
-			return Optional.of(new Error("Loan Amount", "Must not be empty"));
+			return Optional.of(new Error("Loan amount field", "must not be empty"));
 		}else if (loanAmount.equals(BigDecimal.ZERO)) {
-			return Optional.of(new Error("Loan Amount", "Must not be zero value"));
+			return Optional.of(new Error("Loan amount field", "must not be zero value"));
 		}else if (loanAmount.compareTo(BigDecimal.ZERO)<0) {
-			return Optional.of(new Error("Loan Amount", "Must not be negative"));
+			return Optional.of(new Error("Loan amount field", "must not be negative"));
 		}else{
 			return Optional.empty();
 		}
@@ -33,9 +33,9 @@ public class TakeLoanValidator {
 
 	private Optional<Error> validateTerm(int passingTerm){
 		if (passingTerm == 0) {
-			return Optional.of(new Error("Passing term", "Must not be zero"));
+			return Optional.of(new Error("Passing term field", "must not be zero value or empty"));
 		}else if (passingTerm < 0) {
-			return Optional.of(new Error("Passing term", "Must not be negative"));
+			return Optional.of(new Error("Passing term field", "must not be negative"));
 		}else{
 			return Optional.empty();
 		}

@@ -27,13 +27,13 @@ public class RegisterCustomerValidator{
 	public Optional<Error> validateLoginEmail(String email){
 		EmailValidator validator = new EmailValidator();
 		if(!validator.isValid(email, null)){
-			return Optional.of(new Error("loginEmail", "Incorrect e-mail"));
+			return Optional.of(new Error("Register e-mail field", "incorrect"));
 		}
 		else if (email == null || email.equals("")){
-			return Optional.of(new Error("loginEmail", "E-mail must not be empty"));
+			return Optional.of(new Error("Register e-mail field", "must not be empty"));
 		}
 		else if (alreadyExist(email)) {
-			return Optional.of(new Error("loginEmail", "E-mail already exist"));
+			return Optional.of(new Error("", "e-mail already exist"));
 		}else{
 			return Optional.empty();
 		}
@@ -45,9 +45,9 @@ public class RegisterCustomerValidator{
 
 	public Optional<Error> validatePassword(String password){
 		if (password == null || password.equals("")){
-			return Optional.of(new Error("password", "Password must not be empty"));
+			return Optional.of(new Error("Password field", "must not be empty"));
 		}else if (password.length() < 4){
-			return Optional.of(new Error("password", "Password must not be shorter than 4 symbols"));
+			return Optional.of(new Error("", " Password must not be shorter than 4 symbols"));
 		}else{
 			return Optional.empty();
 		}

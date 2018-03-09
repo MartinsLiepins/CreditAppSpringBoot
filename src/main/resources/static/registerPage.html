@@ -55,8 +55,9 @@
                     if(obj.status == "Done"){
                         return responseMessage = "You are registered, please login";
                     }else{
+                        responseMessage = "Credentials error:" + "<br>";
                         for(i in obj.errors){
-                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>"
+                          responseMessage += "- " + obj.errors[i].field + " " + obj.errors[i].errorMessage + "<br>"
                         }
                         return responseMessage;
                     }
@@ -70,10 +71,7 @@
 
         </div>
         <!-- ********************** -->
-        <div class="item4">
-            <!-- ********************** -->
-        </div>
-        <!-- ********************** -->
+
 
     </div>
 </div>

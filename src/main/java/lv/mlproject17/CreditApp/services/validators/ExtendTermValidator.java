@@ -35,11 +35,11 @@ public class ExtendTermValidator {
 
 	private Optional<Error> validateTerm(int termWeeks){
 		if (termWeeks == 0) {
-			return Optional.of(new Error("Extend term weeks", "Must be not empty"));
+			return Optional.of(new Error("Term in weeks field", "must be not empty"));
 		}else if (termWeeks < 0) {
-			return Optional.of(new Error("Extend term weeks", "Must not by negative"));
+			return Optional.of(new Error("Term in weeks field", "must not by negative"));
 		}else if (termWeeks > MAX_EXTEND_TERM_WEEKS) {
-			return Optional.of(new Error("Extend term weeks", "Must not by greater then "+
+			return Optional.of(new Error("Term in weeks field", "must not by greater then "+
 					MAX_EXTEND_TERM_WEEKS + " weeks"));
 		}else{
 			return Optional.empty();

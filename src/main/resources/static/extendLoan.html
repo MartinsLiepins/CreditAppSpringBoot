@@ -25,6 +25,7 @@
                 <li class="navi"><a  class="active" href="#home">Extend loan</a></li>
                 <li class="navi"><a  href="viewLoans.html">View loans</a></li>
                 <li class="navi"><a  href="repayLoan.html">Repay loan</a></li>
+                <li class="navi" style="float:right"><a  href="index.html">Logout</a></li>
             </ul>
             <br>
             term in weeks: <input id="extend_term_weeks" type="text" name="term" value=""><br /><br />
@@ -62,8 +63,9 @@
                     if(obj.status == "Done"){
                         return responseMessage = "The loan is extended";
                     }else if(obj.status == "Error"){
+                        responseMessage = " ";
                         for(i in obj.errors){
-                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>";
+                          responseMessage += "- " + obj.errors[i].field + " " +  obj.errors[i].errorMessage + "<br>";
                         }
                         return responseMessage;
 					}
@@ -81,11 +83,7 @@
         </div>
 
         <!-- ********************** -->
-        <div class="item4">
-            <!-- ********************** -->
-        </div>
 
-        <!-- ********************** -->
 
     </div>
 </div>

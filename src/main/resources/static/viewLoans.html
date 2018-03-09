@@ -25,6 +25,7 @@
                 <li class="navi"><a  href="extendLoan.html">Extend loan</a></li>
                 <li class="navi"><a  class="active" href="#home">View loans</a></li>
                 <li class="navi"><a  href="repayLoan.html">Repay loan</a></li>
+                <li class="navi" style="float:right"><a  href="index.html">Logout</a></li>
             </ul>
             <br>
 
@@ -49,23 +50,26 @@
                     var responseMessage, i = "";
                     var obj = JSON.parse(jsonResponse);
                     if(obj.status == "Done"){
-                        responseMessage = "You have such loans: " + "<br>";
-                        for(i in obj.viewLoansList){
-                            responseMessage += i + "." +
-                            " amount: " + obj.viewLoansList[i].amount + " EUR/" +
-                            " term: " + obj.viewLoansList[i].passingTermDays + " days/" +
-                            " date: " + obj.viewLoansList[0].loanIssueDate.year + ".";
+                        return responseMessage = "Sorry, page under construction! " + "<br>";
 
-                                        <!--obj.viewLoansList[i].loanIssueDate.monthValue + "." +-->
-                                        <!--obj.viewLoansList[i].loanIssueDate.dayOfMonth + "."; -->
-                            <!--" loan returned: " obj.viewLoansList[i].loanReturnState + "/" +-->
-                            <!--" loan extended: " obj.viewLoansList[i].extendedLoans + "/" +-->
+                        <!--responseMessage = "You have such loans: " + "<br>";-->
+                        <!--for(i in obj.viewLoansList){-->
+                            <!--responseMessage += i + "." +-->
+                            <!--" amount: " + obj.viewLoansList[i].amount + " EUR/" +-->
+                            <!--" term: " + obj.viewLoansList[i].passingTermDays + " days/" +-->
+                            <!--" date: " + obj.viewLoansList[0].loanIssueDate.year + ".";-->
 
-                        }
-                        return responseMessage;
+                                        <!--&lt;!&ndash;obj.viewLoansList[i].loanIssueDate.monthValue + "." +&ndash;&gt;-->
+                                        <!--&lt;!&ndash;obj.viewLoansList[i].loanIssueDate.dayOfMonth + "."; &ndash;&gt;-->
+                            <!--&lt;!&ndash;" loan returned: " obj.viewLoansList[i].loanReturnState + "/" +&ndash;&gt;-->
+                            <!--&lt;!&ndash;" loan extended: " obj.viewLoansList[i].extendedLoans + "/" +&ndash;&gt;-->
+
+                        <!--}-->
+                        <!--return responseMessage;-->
                     }else{
+                        responseMessage = " ";
                         for(i in obj.errors){
-                          responseMessage += "- "+ obj.errors[i].errorMessage + "<br>";
+                          responseMessage += "- " + obj.errors[i].field + " " + obj.errors[i].errorMessage + "<br>";
                         }
                         return responseMessage;
                     }
@@ -81,11 +85,7 @@
         </div>
 
         <!-- ********************** -->
-        <div class="item4">
-            <!-- ********************** -->
-        </div>
 
-        <!-- ********************** -->
 
     </div>
 </div>
