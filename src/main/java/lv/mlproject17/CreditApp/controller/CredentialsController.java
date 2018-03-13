@@ -16,6 +16,7 @@ public class CredentialsController {
 	private LoginService loginService;
 
 	@PostMapping(path="/register")
+	@ResponseBody
 	public Response registerNewCustomer(
 			@RequestBody CredentialsDto credentialsDto){
 		return registerCustomerService.registerUser(

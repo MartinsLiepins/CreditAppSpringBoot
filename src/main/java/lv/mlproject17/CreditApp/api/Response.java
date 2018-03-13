@@ -1,7 +1,5 @@
 package lv.mlproject17.CreditApp.api;
 
-import lv.mlproject17.CreditApp.dto.ViewUserLoansDto;
-
 import java.util.List;
 
 /**
@@ -31,9 +29,6 @@ public class Response {
 		this.warnings = warnings;
 	}
 
-	public Response(String status, List<ViewUserLoansDto> viewList){
-		this.status = status;
-	}
 
 	public List<Error> getErrors(){
 		return errors;
@@ -41,7 +36,6 @@ public class Response {
 	public List<Warning> getWarnings(){
 		return warnings;
 	}
-
 	public String getStatus(){
 		return status;
 	}

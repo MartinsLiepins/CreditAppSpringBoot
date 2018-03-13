@@ -27,9 +27,23 @@
                 <li class="navi"><a  href="repayLoan.html">Repay loan</a></li>
                 <li class="navi" style="float:right"><a  href="index.html">Logout</a></li>
             </ul>
-            <br>
-            loan amount: <input id="loan_amount" type="text" name="amount" value=""><br /><br />
-            passing term: <input id="passing_term" type="text" name="passingTerm" value=""><br /><br />
+            <br /><br />
+
+            <div>
+                <label for="loan_amount" name="amount" style="float: left; margin-right:7px;margin-left:40px">
+                    Loan amount:
+                </label>
+                <input type="text" class="textbox" id="loan_amount" placeholder="Enter loan amount"/>
+                <br />
+            </div>
+
+            <div >
+                <label for="passing_term" style="float: left; margin-right:5px;margin-left:40px">
+                    Passing term:
+                </label>
+                <input type="text" class="textbox" name="passingTerm" id="passing_term" placeholder="Enter term in days"/>
+                <br />
+            </div>
 
             <button onclick="loginJsonReq()">Submit</button>
 

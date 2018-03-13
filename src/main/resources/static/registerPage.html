@@ -19,8 +19,17 @@
             <!-- ********************** -->
             <p class="left_align"><a href="/index.html">Login</a></p>
 
-            e-mail: <input id="email" type="text" name="email" value=""><br /><br />
-            password: <input id="password" type="text" name="password" value=""><br /><br />
+            <div>
+                <label for="email" style="float: left; margin-right:35px;margin-left:40px">E-mail:</label>
+                <input type="text" class="textbox" id="email" placeholder="Enter registration e-mail"/>
+                <br />
+            </div>
+
+            <div >
+                <label for="password" style="float: left; margin-right:5px;margin-left:40px">Password:</label>
+                <input type="text" class="textbox" id="password" placeholder="Enter password"/>
+                <br />
+            </div>
 
             <button onclick="loginJsonReq()">Register</button>
 

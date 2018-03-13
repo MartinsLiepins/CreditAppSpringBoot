@@ -27,9 +27,15 @@
                 <li class="navi"><a  href="repayLoan.html">Repay loan</a></li>
                 <li class="navi" style="float:right"><a  href="index.html">Logout</a></li>
             </ul>
-            <br>
-            term in weeks: <input id="extend_term_weeks" type="text" name="term" value=""><br /><br />
+            <br /><br />
 
+            <div>
+                <label for="extend_term_weeks" name="term" style="float:left; margin-right:5px; margin-left:30px">
+                    Extend term:
+                </label>
+                <input type="text" name="term" class="textbox" id="extend_term_weeks" placeholder="Enter term in weeks"/>
+                <br />
+            </div>
 
             <button onclick="loginJsonReq()">Submit</button>
 

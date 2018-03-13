@@ -27,9 +27,15 @@
                 <li class="navi"><a  class="active" href="#home">Repay loan</a></li>
                 <li class="navi" style="float:right"><a  href="index.html">Logout</a></li>
             </ul>
-            <br>
-            repay amount: <input id="repay_amount" type="text" name="amount" value=""><br /><br />
+            <br /><br />
 
+            <div >
+                <label for="repay_amount" style="float: left; margin-right:5px;margin-left:40px">
+                    Repay amount:
+                </label>
+                <input type="text" name="amount" class="textbox" id="repay_amount" placeholder="Enter repay amount"/>
+                <br />
+            </div>
 
             <button onclick="loginJsonReq()">Submit</button>
 

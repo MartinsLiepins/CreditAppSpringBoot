@@ -54,11 +54,11 @@ public class RepayLoanService {
 		}else if(loan.getAmount().compareTo(repayAmount) == 1){
 			return Response.failResponse
 					(serviceErrorMessageBuilder.buildMessage(
-							"Return amount", "Return loan amount is to small, loan is not returned"));
+							"", "Repay amount is to small, loan is not repaid"));
 		}else{
 			return Response.failResponse(
 					serviceErrorMessageBuilder.buildMessage(
-							"Return amount", "Return loan amount is to large, loan is not returned"));
+							"", "Repay amount is to large, loan is not repaid"));
 		}
 	}
 }
