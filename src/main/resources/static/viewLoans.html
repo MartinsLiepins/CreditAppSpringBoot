@@ -13,13 +13,13 @@
 <div class="spec">
     <div class="grid-container">
         <!-- ********************** -->
-        <div class="item1">
-            <!-- ********************** -->
+        <div>
+         <!-- ********************** -->
             <h1>Quick loan</h1>
         </div>
         <!-- ********************** -->
-        <div class="item2">
-            <!-- ********************** -->
+        <div>
+        <!-- ********************** -->
             <ul class="navi">
                 <li class="navi"><a  href="takeLoan.html">Take loan</a></li>
                 <li class="navi"><a  href="extendLoan.html">Extend loan</a></li>
@@ -50,22 +50,23 @@
                     var responseMessage, i = "";
                     var obj = JSON.parse(jsonResponse);
                     if(obj.status == "Done"){
-                        return responseMessage = "Sorry, page under construction! " + "<br>";
+                        <!--return responseMessage = "Sorry, page under construction! " + "<br>";-->
 
-                        <!--responseMessage = "You have such loans: " + "<br>";-->
-                        <!--for(i in obj.viewLoansList){-->
-                            <!--responseMessage += i + "." +-->
-                            <!--" amount: " + obj.viewLoansList[i].amount + " EUR/" +-->
-                            <!--" term: " + obj.viewLoansList[i].passingTermDays + " days/" +-->
-                            <!--" date: " + obj.viewLoansList[0].loanIssueDate.year + ".";-->
-
-                                        <!--&lt;!&ndash;obj.viewLoansList[i].loanIssueDate.monthValue + "." +&ndash;&gt;-->
-                                        <!--&lt;!&ndash;obj.viewLoansList[i].loanIssueDate.dayOfMonth + "."; &ndash;&gt;-->
-                            <!--&lt;!&ndash;" loan returned: " obj.viewLoansList[i].loanReturnState + "/" +&ndash;&gt;-->
-                            <!--&lt;!&ndash;" loan extended: " obj.viewLoansList[i].extendedLoans + "/" +&ndash;&gt;-->
-
-                        <!--}-->
-                        <!--return responseMessage;-->
+                        responseMessage = "You have such loans: " + "<br>";
+                        for(i in obj.viewLoansList){
+                            responseMessage += i + "." +
+                            " amount: " + obj.viewLoansList[i].amount + " EUR/" +
+                            " term: " + obj.viewLoansList[i].passingTermDays + " days/" +
+                            " issue date: " + obj.viewLoansList[i].loanIssueDate.year + "." +
+                                        obj.viewLoansList[i].loanIssueDate.monthValue + "." +
+                                        obj.viewLoansList[i].loanIssueDate.dayOfMonth + "./" +
+                            " time: " + obj.viewLoansList[i].loanIssueDate.hour + ":" +
+                                        obj.viewLoansList[i].loanIssueDate.minute + ":" +
+                                        obj.viewLoansList[i].loanIssueDate.second + "/" +
+                            getLoanRepayString(i, obj) + "/" +
+                            getLoanExtensions(i, obj);
+                        }
+                        return responseMessage;
                     }else{
                         responseMessage = " ";
                         for(i in obj.errors){
@@ -76,11 +77,45 @@
                 }
             </script>
 
+            <script>
+                function getLoanRepayString(i, obj){
+                    if(obj.viewLoansList[i].loanReturnState == true){
+                        return "repaid";
+                    }else{
+                        return "not repaid";
+                    }
+                }
+            </script>
+
+            <script>
+                function getLoanExtensions(i, obj){
+                    var extendedViewResponse = "";
+                    if(obj.viewLoansList[i].extendedLoans == null){
+                        extendedViewResponse = "not extended/";
+                        return extendedViewResponse;
+                    }else{
+                        extendedViewResponse = "extended: " + "<br>";
+
+                        for(j in obj.viewLoansList[i].extendedLoans){
+                            extendedViewResponse += " -->" +
+                            " term: " + obj.viewLoansList[i].extendedLoans[j].extendTermWeeks + " weeks/" +
+                            " extend date: " + obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.year + "." +
+                                               obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.monthValue + "." +
+                                               obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.dayOfMonth + "./" +
+                            " time: " + obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.hour + ":" +
+                                        obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.minute + ":" +
+                                        obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.second + "/" +
+                            "amount: " + obj.viewLoansList[i].extendedLoans[j].extendedAmount + " EUR/<br>";
+                        }
+                        return extendedViewResponse;
+                    }
+                }
+            </script>
         </div>
 
         <!-- ********************** -->
-        <div class="item3">
-            <!-- ********************** -->
+        <div>
+        <!-- ********************** -->
             <p class="item3" id="displayText"></p>
         </div>
 
