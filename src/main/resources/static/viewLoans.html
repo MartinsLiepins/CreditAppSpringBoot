@@ -50,8 +50,6 @@
                     var responseMessage, i = "";
                     var obj = JSON.parse(jsonResponse);
                     if(obj.status == "Done"){
-                        <!--return responseMessage = "Sorry, page under construction! " + "<br>";-->
-
                         responseMessage = "You have such loans: " + "<br>";
                         for(i in obj.viewLoansList){
                             responseMessage += i + "." +
