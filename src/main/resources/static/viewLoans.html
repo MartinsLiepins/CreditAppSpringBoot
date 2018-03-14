@@ -51,8 +51,8 @@
                     var obj = JSON.parse(jsonResponse);
                     if(obj.status == "Done"){
                         responseMessage = "You have such loans: " + "<br>";
-                        for(i in obj.viewLoansList){
-                            responseMessage += i + "." +
+                        for(var i=0; i<obj.viewLoansList.length; i++){
+                            responseMessage += i+1 + "." +
                             " amount: " + obj.viewLoansList[i].amount + " EUR/" +
                             " term: " + obj.viewLoansList[i].passingTermDays + " days/" +
                             " issue date: " + obj.viewLoansList[i].loanIssueDate.year + "." +
@@ -89,12 +89,11 @@
                 function getLoanExtensions(i, obj){
                     var extendedViewResponse = "";
                     if(obj.viewLoansList[i].extendedLoans == null){
-                        extendedViewResponse = "not extended/";
+                        extendedViewResponse = "not extended/<br>";
                         return extendedViewResponse;
                     }else{
                         extendedViewResponse = "extended: " + "<br>";
-
-                        for(j in obj.viewLoansList[i].extendedLoans){
+                        for(var j=0; j<obj.viewLoansList[i].extendedLoans.length; j++){
                             extendedViewResponse += " -->" +
                             " term: " + obj.viewLoansList[i].extendedLoans[j].extendTermWeeks + " weeks/" +
                             " extend date: " + obj.viewLoansList[i].extendedLoans[j].extendPassingTermDate.year + "." +
